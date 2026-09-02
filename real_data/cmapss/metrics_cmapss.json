@@ -1,0 +1,27 @@
+{
+  "Linear Regression": {
+    "RMSE_cycles": 20.84,
+    "MAE_cycles": 16.61,
+    "R2": 0.73
+  },
+  "Random Forest": {
+    "RMSE_cycles": 17.18,
+    "MAE_cycles": 12.2,
+    "R2": 0.816
+  },
+  "Gradient Boosting": {
+    "RMSE_cycles": 17.42,
+    "MAE_cycles": 12.02,
+    "R2": 0.811
+  },
+  "Support Vector Regression": {
+    "RMSE_cycles": 18.89,
+    "MAE_cycles": 13.22,
+    "R2": 0.778
+  },
+  "Neural Network (MLP)": {
+    "RMSE_cycles": 17.32,
+    "MAE_cycles": 12.09,
+    "R2": 0.813
+  }
+}
