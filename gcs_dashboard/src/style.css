@@ -1,0 +1,87 @@
+@import "tailwindcss";
+@source not "../3D_models";
+
+@layer base {
+  body {
+    background-color: #282828;
+    color: #c5cbd3;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* XMPro Dark Industrial Matte Theme Tokens */
+.bg-xmpro-bg {
+  background-color: #282828;
+}
+.bg-xmpro-header {
+  background-color: #252525;
+}
+.bg-xmpro-sidebar {
+  background-color: #202020;
+}
+.bg-xmpro-card {
+  background-color: #303030;
+}
+.bg-xmpro-card-dark {
+  background-color: #292929;
+}
+.bg-xmpro-hover {
+  background-color: #3a3a3a;
+}
+.border-xmpro-border {
+  border-color: #454545;
+}
+.border-xmpro-border-subtle {
+  border-color: #3d3d3d;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #282828;
+}
+::-webkit-scrollbar-thumb {
+  background: #454545;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+
+/* Radar / Pulse Animation */
+@keyframes ping-slow {
+  0% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 0.3;
+  }
+  100% {
+    transform: scale(0.95);
+    opacity: 0.8;
+  }
+}
+.animate-ping-slow {
+  animation: ping-slow 2.5s infinite ease-in-out;
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    filter: drop-shadow(0 0 2px rgba(190, 190, 190, 0.25));
+  }
+  50% {
+    filter: drop-shadow(0 0 8px rgba(210, 210, 210, 0.45));
+  }
+}
+.animate-pulse-glow {
+  animation: pulse-glow 3s infinite ease-in-out;
+}
