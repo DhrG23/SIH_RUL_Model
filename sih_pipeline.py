@@ -20,16 +20,25 @@ detected to eventual failure." That means:
      until FaultDetector's argmax first departs from the healthy class.
 """
 import numpy as np
+from trend_tracker import TrendFeatureBank
 
 
 class PrognosticsSystem:
     def __init__(self, feature_extractor, health_estimator, fault_detector, rul_predictor,
-                 healthy_class=0, debounce_n_frames=5, debounce_prob_threshold=0.80):
+                 healthy_class=0, debounce_n_frames=5, debounce_prob_threshold=0.80,
+                 trend_ewma_alpha=0.15, trend_slope_window=8):
         self.fe = feature_extractor
         self.health = health_estimator
         self.fault = fault_detector
         self.rul = rul_predictor
         self.healthy_class = healthy_class
+        # Per-unit statistical trend state (EWMA mean/std/CV of the health
+        # index + rolling-window degradation slope/R^2) -- appended onto
+        # the raw feature vector before FaultDetector/RULPredictor see it,
+        # so both models get rate-of-change and confidence-in-that-rate,
+        # not just instantaneous level. See trend_tracker.py.
+        self.trend = TrendFeatureBank(ewma_alpha=trend_ewma_alpha,
+                                       slope_window=trend_slope_window)
         # Debounce config: require EITHER N consecutive non-healthy frames
         # OR a sustained moving-average fault probability above threshold
         # before latching into the RUL phase -- guards against a single
@@ -79,6 +88,38 @@ class PrognosticsSystem:
                 groups.append(unit)
         return np.array(X_post), np.array(y_ttf), np.array(groups)
 
+    # ---------------- offline trend-feature augmentation ----------------
+    def augment_features_with_trend(self, unit_ids, cycle_index, feature_matrix, health_values):
+        """Batch/offline equivalent of the online trend tracking done in
+        process_new_reading. Replays each unit's health-index sequence, IN
+        CYCLE ORDER, through a FRESH TrendFeatureBank (not self.trend --
+        that one is reserved for live streaming state), so the trend
+        features used to train FaultDetector/RULPredictor are computed
+        exactly as they would be seen live: causally, with no peeking at
+        a unit's future cycles. Returns feature_matrix with the trend
+        columns appended, in the ORIGINAL row order.
+
+        health_values: (N,) health index already computed for every row
+        (e.g. self.health.health_index(feature_matrix)) -- passed in
+        rather than recomputed here, since HealthEstimator may need to be
+        fit on a healthy-only subset first.
+        """
+        unit_ids = np.asarray(unit_ids)
+        cycle_index = np.asarray(cycle_index)
+        health_values = np.asarray(health_values, dtype=float)
+        bank = TrendFeatureBank(ewma_alpha=self.trend.ewma_alpha,
+                                 slope_window=self.trend.slope_window)
+        n_trend_feats = len(bank.feature_names())
+        trend_out = np.zeros((len(unit_ids), n_trend_feats))
+
+        for unit in np.unique(unit_ids):
+            idx = np.where(unit_ids == unit)[0]
+            order = idx[np.argsort(cycle_index[idx])]  # causal: earliest cycle first
+            for i in order:
+                trend_out[i] = bank.update(unit, health_values[i])
+
+        return np.concatenate([feature_matrix, trend_out], axis=1)
+
     # ---------------- online / streaming use ----------------
     def process_new_reading(self, unit_id, cycle, signal_window, sample_rate):
         """One new reading for one unit: extract features, get health index
@@ -88,11 +129,23 @@ class PrognosticsSystem:
         RUL phase; only sustained evidence does."""
         feat_vec = self.fe.extract_vector(signal_window, sample_rate)
         health = self.health.health_index(feat_vec.reshape(1, -1))
-        fault_proba = self.fault.predict_proba(feat_vec.reshape(1, -1))[0]
+        health_val = float(np.ravel(health)[0])
+
+        # Statistical trend features (EWMA mean/std/CV + rolling slope/R^2
+        # of this unit's health index), updated causally as each reading
+        # arrives, then appended onto the raw feature vector -- this is
+        # the SAME augmentation as augment_features_with_trend() used at
+        # training time, so FaultDetector/RULPredictor see consistent
+        # inputs online and offline.
+        trend_feats = self.trend.update(unit_id, health_val)
+        aug_vec = np.concatenate([feat_vec, trend_feats])
+
+        fault_proba = self.fault.predict_proba(aug_vec.reshape(1, -1))[0]
         fault_class = self.fault.classes_[np.argmax(fault_proba)]
         non_healthy_prob = 1.0 - fault_proba[np.where(self.fault.classes_ == self.healthy_class)[0][0]]
 
-        result = {"unit": unit_id, "cycle": cycle, "health_index": float(np.ravel(health)[0]),
+        result = {"unit": unit_id, "cycle": cycle, "health_index": health_val,
+                  "health_trend": dict(zip(self.trend.feature_names(), trend_feats.tolist())),
                   "fault_class": fault_class, "fault_proba": fault_proba, "rul_estimate": None,
                   "debounce_confirmed": unit_id in self._onset_cycle}
 
@@ -117,7 +170,7 @@ class PrognosticsSystem:
             result["fault_onset"] = True
 
         if unit_id in self._onset_cycle:
-            rul_pred = self.rul.predict(feat_vec.reshape(1, -1))[0]
+            rul_pred = self.rul.predict(aug_vec.reshape(1, -1))[0]
             result["rul_estimate"] = float(rul_pred)
         return result
 
@@ -179,18 +232,32 @@ if __name__ == "__main__":
     healthy_mask = labels == 0
     health_est = MahalanobisHealthEstimator().fit(feats[train_mask & healthy_mask])
 
-    # ---- Fault detector: fit on all training rows/labels ----
-    fault_det = HierarchicalFaultDetector(n_splits=3).fit(feats[train_mask], labels[train_mask])
+    # ---- Trend features: compute health index for EVERY row, then augment
+    # every feature vector with that unit's causal EWMA mean/std/CV +
+    # rolling degradation slope/R^2 (see trend_tracker.py). Built via a
+    # throwaway PrognosticsSystem purely to reuse augment_features_with_trend
+    # before the real system/fault_det/rul_pred exist yet. ----
+    health_vals_all = health_est.health_index(feats)
+    _trend_builder = PrognosticsSystem(fe, health_est, fault_detector=None, rul_predictor=None)
+    feats_aug = _trend_builder.augment_features_with_trend(units, cycles, feats, health_vals_all)
+    print(f"Feature dimensionality: {feats.shape[1]} raw + "
+          f"{feats_aug.shape[1] - feats.shape[1]} trend = {feats_aug.shape[1]} total")
 
-    # ---- RUL predictor: fit ONLY on post-onset segments ----
+    # ---- Fault detector: fit on all training rows/labels (augmented feats) ----
+    fault_det = HierarchicalFaultDetector(n_splits=3).fit(feats_aug[train_mask], labels[train_mask])
+
+    # ---- RUL predictor: fit ONLY on post-onset segments (augmented feats) ----
     system = PrognosticsSystem(fe, health_est, fault_det, rul_predictor=None)
     X_post, y_ttf, groups_post = system.build_post_onset_training_set(
-        units[train_mask], feats[train_mask], cycles[train_mask], labels[train_mask],
+        units[train_mask], feats_aug[train_mask], cycles[train_mask], labels[train_mask],
         failure_cycle)
     print(f"Post-onset training rows for RUL: {len(y_ttf)} (from "
           f"{len(np.unique(groups_post))} units)")
     rul_pred = HierarchicalRULPredictor(n_splits=3).fit(X_post, y_ttf, groups=groups_post)
     system.rul = rul_pred
+    # Streaming must start from a clean trend state, not whatever the
+    # batch replay above left behind -- reset before touching test units.
+    system.trend.reset()
 
     # ---- Evaluate end-to-end on held-out TEST units ----
     print("\nStreaming held-out test units through the full pipeline...\n")
