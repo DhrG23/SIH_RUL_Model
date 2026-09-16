@@ -1,0 +1,8 @@
+{
+  "mass": 1020.0,
+  "wing_area": 11.5,
+  "aspect_ratio": 19.0,
+  "oswald_efficiency": 0.80,
+  "CD0": 0.028,
+  "CLmax": 1.4
+}

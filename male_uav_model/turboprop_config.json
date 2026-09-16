@@ -1,0 +1,9 @@
+{
+  "pressure_ratio": 6.5,
+  "turbine_inlet_temp": 1350.0,
+  "eta_compressor": 0.82,
+  "eta_turbine": 0.86,
+  "eta_combustor": 0.98,
+  "eta_mechanical": 0.97,
+  "mass_flow_design": 0.30
+}
