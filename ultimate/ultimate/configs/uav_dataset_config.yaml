@@ -1,0 +1,52 @@
+# Dataset config for the real UAV flight data (data/uav_processed_dataset.csv),
+# built from the ALFA/carbonZ flight logs in data/processed/ by
+# build_uav_dataset.py. This is what replaced NASA C-MAPSS as the
+# framework's primary dataset -- see README.md "Migrating off C-MAPSS".
+#
+# 47 real fixed-wing UAV flights: each is either healthy (no_failure) or
+# contains one real, induced, labeled in-flight fault (engine / aileron /
+# rudder / elevator). One "unknown" (no_ground_truth) flight is excluded
+# from training via censored=1.
+
+path: data/uav_processed_dataset.csv
+id_col: unit          # one flight session per unit
+time_col: time_s       # seconds elapsed since that flight's first recorded sample
+
+feature_cols:
+  - airspeed
+  - groundspeed
+  - heading
+  - throttle
+  - altitude
+  - climb
+  - imu_angular_velocity.x
+  - imu_angular_velocity.y
+  - imu_angular_velocity.z
+  - imu_linear_acceleration.x
+  - imu_linear_acceleration.y
+  - imu_linear_acceleration.z
+  - batt_voltage
+  - batt_current
+  - roll_deg
+  - pitch_deg
+  - yaw_deg
+  - nav_airspeed
+
+fault_label_col: fault_type   # discrete: healthy / engine / aileron / rudder / elevator / unknown
+censored_col: censored         # 1 = no_ground_truth flight, excluded from RUL training
+# rul_col: (omitted) -- RUL is inferred per the standard run-to-failure
+#   convention (this flight's last recorded second - current second),
+#   which for these flights means "time remaining in the recorded episode"
+#   rather than literal crash time (these are recoverable, instrumented
+#   test flights, not run-to-destruction) -- see README's dataset caveats.
+
+test_frac: 0.2
+seed: 0
+
+n_baseline_cycles: 10   # rows/flight treated as "known healthy" (each flight's earliest samples)
+n_regimes: 1
+trend_k: 3
+trend_slope_window: 15   # shorter than C-MAPSS's default 20 -- UAV flights are much shorter traces
+onset_k_std: 3.0
+onset_persistence: 3
+top_k_features: null

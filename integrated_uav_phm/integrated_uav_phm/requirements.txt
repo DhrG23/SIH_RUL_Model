@@ -1,0 +1,7 @@
+numpy
+pandas
+scikit-learn
+scipy
+# Optional -- only needed if you want the LLM-assisted explanation narrative
+# in explainer.py (falls back to the local rule-based explanation without it):
+anthropic

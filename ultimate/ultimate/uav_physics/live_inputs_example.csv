@@ -1,0 +1,13 @@
+dt,throttle,gamma_cmd_deg,temp_offset_C,turbulence
+5,1.0,4,0,none
+5,1.0,4,0,none
+5,1.0,4,0,light
+5,0.9,4,0,light
+5,0.9,3,0,none
+5,0.6,0,0,none
+5,0.6,0,20,none
+5,0.6,0,20,moderate
+5,0.6,0,20,moderate
+5,0.55,0,-20,none
+5,0.55,0,-20,light
+5,0.55,0,-20,severe

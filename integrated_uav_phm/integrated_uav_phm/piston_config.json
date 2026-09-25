@@ -1,0 +1,6 @@
+{
+  "sea_level_power_W": 85000.0,
+  "bsfc_sea_level": 8.333e-08,
+  "critical_altitude_m": 0.0,
+  "altitude_lapse_exponent": 1.0
+}

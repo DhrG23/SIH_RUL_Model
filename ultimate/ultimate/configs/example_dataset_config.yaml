@@ -1,0 +1,25 @@
+# Example config for run_on_custom_data.py.
+# Copy this file, point `path` at your own CSV, and fill in your own
+# column names -- everything else has a sensible default (see the
+# comments) and can be left out.
+
+path: data/my_dataset.csv     # REQUIRED: your CSV
+id_col: unit                  # REQUIRED: one value per asset/unit
+time_col: cycle                # REQUIRED: cycle / timestamp / flight-hour column
+
+# --- optional: omit any of these to use the stated default ---
+# feature_cols: [s1, s2, s3]   # default: every other numeric column
+# rul_col: RUL                 # default: inferred as (unit's last cycle - this cycle)
+# fault_label_col: fault_type  # default: none -> binary healthy/degrading from onset checker
+# censored_col: still_running  # default: none (assumes every unit's trace runs to failure)
+
+test_frac: 0.2
+seed: 0
+
+n_baseline_cycles: 10          # how many of each unit's EARLIEST rows count as "known healthy"
+n_regimes: 1                   # >1 only if your asset genuinely operates in switching regimes
+trend_k: 3                     # how many raw signals the trend tracker follows (auto-ranked)
+trend_slope_window: 20
+onset_k_std: 3.0
+onset_persistence: 3
+top_k_features: null           # set an integer to cap feature count after selection
