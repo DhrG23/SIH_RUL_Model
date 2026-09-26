@@ -1,0 +1,246 @@
+# ==============================================================================
+# Engine Simulator — Parameter Metadata Schema
+# ==============================================================================
+# Single source of truth for all simulation variables: names, ranges, units,
+# defaults, and categories. Replaces HTML-based parameter discovery.
+# ==============================================================================
+
+parameters:
+
+  # ============================================================================
+  # ENVIRONMENT FACTORS
+  # ============================================================================
+  - id: "altitude"
+    label: "Altitude"
+    category: "environment"
+    min: 10000
+    max: 30000
+    default: 10000
+    unit: "ft"
+    step: 100
+
+  - id: "temperature"
+    label: "Temperature"
+    category: "environment"
+    min: -10
+    max: 100
+    default: 15
+    unit: "°C"
+    step: 1
+
+  - id: "humidity"
+    label: "Humidity"
+    category: "environment"
+    min: 0
+    max: 100
+    default: 50
+    unit: "%"
+    step: 1
+
+  - id: "wind_speed"
+    label: "Wind Speed"
+    category: "environment"
+    min: 10
+    max: 100
+    default: 25
+    unit: "mph"
+    step: 1
+
+  - id: "wind_direction"
+    label: "Wind Direction"
+    category: "environment"
+    min: 0
+    max: 360
+    default: 180
+    unit: "°"
+    step: 1
+
+  # ============================================================================
+  # VEHICLE / OPERATING FACTORS
+  # ============================================================================
+  - id: "throttle"
+    label: "Throttle Position"
+    category: "vehicle"
+    min: 0
+    max: 100
+    default: 35
+    unit: "%"
+    step: 1
+
+  - id: "engine_rpm"
+    label: "Engine RPM"
+    category: "vehicle"
+    min: 1000
+    max: 6000
+    default: 3200
+    unit: "RPM"
+    step: 25
+    is_state_variable: true
+
+  - id: "engine_load"
+    label: "Engine Load"
+    category: "vehicle"
+    min: 0
+    max: 100
+    default: 45
+    unit: "%"
+    step: 1
+
+  - id: "afr"
+    label: "Air/Fuel Ratio"
+    category: "vehicle"
+    min: 10
+    max: 20
+    default: 14.7
+    unit: ":1"
+    step: 0.1
+
+  - id: "cht"
+    label: "Cylinder Head Temperature"
+    category: "vehicle"
+    min: 100
+    max: 250
+    default: 180
+    unit: "°C"
+    step: 1
+    is_state_variable: true
+
+  - id: "egt"
+    label: "Exhaust Gas Temperature"
+    category: "vehicle"
+    min: 400
+    max: 1000
+    default: 720
+    unit: "°C"
+    step: 5
+    is_state_variable: true
+
+  - id: "oil_pressure"
+    label: "Oil Pressure"
+    category: "vehicle"
+    min: 20
+    max: 100
+    default: 58
+    unit: "PSI"
+    step: 1
+
+  - id: "oil_temperature"
+    label: "Oil Temperature"
+    category: "vehicle"
+    min: 50
+    max: 150
+    default: 92
+    unit: "°C"
+    step: 1
+    is_state_variable: true
+
+  # ============================================================================
+  # PHYSICS & FAULT MODEL PARAMETERS
+  # ============================================================================
+  - id: "boost_pressure_ratio"
+    label: "Boost Pressure Ratio"
+    category: "physics"
+    min: 1
+    max: 2
+    default: 1
+    unit: ":1"
+    step: 0.1
+
+  - id: "misfire_fraction"
+    label: "Misfire Intensity"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "timing_retard"
+    label: "Ignition Timing Retard"
+    category: "physics"
+    min: 0
+    max: 30
+    default: 0
+    unit: "°"
+    step: 1
+
+  - id: "injector_clogging"
+    label: "Injector Clogging"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "injector_leakage"
+    label: "Injector Leakage"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "radiator_blockage"
+    label: "Radiator Blockage"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "fin_fouling"
+    label: "Fin Fouling"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "coolant_leak"
+    label: "Coolant Leak"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "bearing_clearance"
+    label: "Bearing Clearance Wear"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "pump_wear"
+    label: "Oil Pump Wear"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "viscosity_loss"
+    label: "Oil Viscosity Loss"
+    category: "physics"
+    min: 0
+    max: 80
+    default: 0
+    unit: "%"
+    step: 1
+
+  - id: "boundary_scuffing"
+    label: "Boundary Scuffing"
+    category: "physics"
+    min: 0
+    max: 100
+    default: 0
+    unit: "%"
+    step: 1

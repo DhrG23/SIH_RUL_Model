@@ -1,0 +1,47 @@
+<section class="telemetry-grid-section">
+  <div class="grid-header">
+    <div class="header-info">
+      <h3 class="section-title">Telemetry Snapshot</h3>
+      <span class="channel-badge">{{ filteredParameters().length }} channels</span>
+    </div>
+
+    <form class="telemetry-search" (submit)="$event.preventDefault(); searchTelemetry()">
+      <label class="sr-only" for="telemetry-search-input">Search telemetry</label>
+      <input
+        id="telemetry-search-input"
+        type="search"
+        placeholder="Search channels"
+        [value]="searchQuery()"
+        (input)="searchQuery.set($any($event.target).value)"
+      />
+      <button type="submit" [disabled]="filteredParameters().length === 0">Search</button>
+    </form>
+
+    <!-- Category Filter Tabs -->
+    <div class="filter-tabs">
+      @for (cat of categories; track cat.id) {
+        <button
+          type="button"
+          class="tab-btn"
+          [class.active]="activeCategory() === cat.id"
+          (click)="setCategory(cat.id)"
+        >
+          {{ cat.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <ul class="cards-grid" [class.telemetry-list]="true">
+    @for (param of filteredParameters(); track param.key) {
+      <li>
+        <app-telemetry-card
+          [param]="param"
+          [isSelected]="selectedKey() === param.key"
+          [listMode]="true"
+          (cardSelect)="onCardSelect($event)"
+        />
+      </li>
+    }
+  </ul>
+</section>

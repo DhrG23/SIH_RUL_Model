@@ -1,0 +1,40 @@
+<section class="model-predictions-card" aria-labelledby="model-predictions-title">
+  <h3 id="model-predictions-title">ML model predictions</h3>
+  @if ((store.rulPredictions() | keyvalue).length > 0) {
+    <div class="model-list" aria-label="RUL model predictions">
+      @for (model of models; track model.name) {
+        <div class="model-row">
+          <span class="model-label">{{ model.shortName }}</span>
+          <div class="model-bar" aria-hidden="true">
+            <span [style.width]="barWidth(model.name)"></span>
+          </div>
+          <strong class="model-value">
+            @if (value(model.name) !== null) {
+              {{ value(model.name) | number: '1.0-1' }} h
+            } @else {
+              --
+            }
+          </strong>
+        </div>
+      }
+    </div>
+  } @else {
+    <p class="empty-state">RUL models are waiting for live telemetry.</p>
+  }
+</section>
+
+<section class="rul-card" aria-labelledby="rul-title">
+  <div class="rul-card-header">
+    <span class="rul-kicker">Remaining useful life (RUL)</span>
+    <span class="health-badge" [class.badge-attention]="healthStatus() === 'attention'" [class.badge-critical]="healthStatus() === 'critical'">
+      {{ healthStatus() }}
+    </span>
+  </div>
+
+  <div class="rul-value-row">
+    <strong id="rul-title" class="rul-value">{{ minimumRul() !== null ? (minimumRul() | number: '1.0-0') : '--' }}</strong>
+    <span class="rul-unit">hrs RUL</span>
+  </div>
+
+  <p class="diagnostic-text">{{ diagnosticText() }}</p>
+</section>

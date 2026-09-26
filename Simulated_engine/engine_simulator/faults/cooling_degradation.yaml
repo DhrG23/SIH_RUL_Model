@@ -1,0 +1,20 @@
+# Cooling System Degradation Fault Configuration
+# Physical Impact: Reduced heat rejection from cylinder head and oil cooler -> CHT and Oil Temp rise.
+fault_type: "cooling_degradation"
+description: "Progressive radiator fin fouling and air path blockage reducing convective heat transfer."
+
+start_time_ms: 15000
+end_time_ms: 45000
+severity_start: 0.0
+severity_end: 0.80
+progression_curve: "sigmoid"
+
+# Latent physical parameters scaled by the progression severity
+affected_parameters:
+  radiator_blockage_ratio: 0.65
+  fin_fouling_factor: 0.40
+  coolant_leak_fraction: 0.30
+
+config:
+  warning_threshold_cht_c: 210.0
+  alarm_threshold_cht_c: 235.0

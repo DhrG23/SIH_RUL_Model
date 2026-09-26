@@ -1,0 +1,25 @@
+# Overheat Cooling Failure Mission Scenario
+# 60-second cruise mission introducing progressive cooling degradation.
+# Physics Response: Reduced convection coefficient -> Reduced CHT & oil heat rejection -> High CHT/Oil Temp.
+
+simulation:
+  duration_ms: 60000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 12000.0
+  temperature_c: 18.0
+  humidity_pct: 45.0
+  wind_speed_mph: 30.0
+  wind_direction_deg: 180.0
+  throttle_pct: 45.0
+  engine_rpm: 3400.0
+  engine_load_pct: 50.0
+
+environment_events: []
+operating_condition_changes: []
+
+fault_files:
+  - "cooling_degradation.yaml"

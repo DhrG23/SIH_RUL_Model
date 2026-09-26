@@ -1,0 +1,31 @@
+<svg
+  [attr.width]="width"
+  [attr.height]="height"
+  class="sparkline-svg"
+  preserveAspectRatio="none"
+>
+  @if (pathData().line) {
+    <!-- Subtle Area Fill -->
+    <path
+      [attr.d]="pathData().area"
+      [attr.fill]="fillColor"
+      opacity="0.75"
+    />
+    <!-- Sparkline Stroke -->
+    <path
+      [attr.d]="pathData().line"
+      [attr.stroke]="strokeColor"
+      fill="none"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    <!-- Latest Point Indicator -->
+    <circle
+      [attr.cx]="pathData().lastX"
+      [attr.cy]="pathData().lastY"
+      r="2"
+      [attr.fill]="strokeColor"
+    />
+  }
+</svg>

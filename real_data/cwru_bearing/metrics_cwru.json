@@ -1,0 +1,29 @@
+{
+  "strict_file_level_split": {
+    "accuracy": 0.575,
+    "macro_f1": 0.398,
+    "note": "No leakage: train/test files are fully disjoint recordings. This is the honest number."
+  },
+  "standard_window_level_split": {
+    "accuracy": 0.996,
+    "macro_f1": 0.993,
+    "note": "Matches how most published CWRU papers evaluate. Likely optimistic due to overlapping windows from the same recording appearing in both train and test."
+  },
+  "n_train_windows": 2121,
+  "n_test_windows": 1060,
+  "classes": [
+    "Ball Fault",
+    "Inner Race Fault",
+    "Normal",
+    "Outer Race Fault"
+  ],
+  "feature_importance": {
+    "rms": 0.2382,
+    "peak": 0.145,
+    "crest_factor": 0.0503,
+    "kurtosis": 0.0801,
+    "skewness": 0.0454,
+    "std": 0.2317,
+    "mean_abs": 0.2093
+  }
+}

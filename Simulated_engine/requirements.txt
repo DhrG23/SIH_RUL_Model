@@ -1,0 +1,19 @@
+# ==============================================================================
+# Engine Simulator — Python Dependencies
+# ==============================================================================
+
+# Core numerical & data processing
+numpy>=1.24
+pandas>=2.0
+
+# Configuration
+pyyaml>=6.0
+
+# Real-time WebSocket server
+fastapi>=0.100
+uvicorn>=0.23
+websockets>=11.0
+
+# Local-model RUL inference
+scikit-learn>=1.3
+joblib>=1.3

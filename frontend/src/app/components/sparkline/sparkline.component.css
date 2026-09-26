@@ -1,0 +1,10 @@
+:host {
+  display: inline-block;
+  line-height: 0;
+  vertical-align: middle;
+}
+
+.sparkline-svg {
+  display: block;
+  overflow: visible;
+}

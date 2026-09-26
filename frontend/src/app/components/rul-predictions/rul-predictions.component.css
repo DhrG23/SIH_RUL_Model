@@ -1,0 +1,44 @@
+:host { display: block; }
+
+.rul-card {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+}
+
+.rul-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.rul-kicker {
+  color: var(--accent-primary);
+  font-size: 0.66rem;
+  font-family: var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.health-badge { padding: 0.25rem 0.55rem; border: 1px solid var(--status-normal-border); color: var(--status-normal); font-family: var(--font-mono); font-size: 0.65rem; text-transform: uppercase; }
+.badge-attention { border-color: var(--status-caution-border); color: var(--status-caution); }
+.badge-critical { border-color: var(--status-critical-border); color: var(--status-critical); }
+.rul-value-row { display: flex; align-items: baseline; gap: 0.55rem; margin-top: 0.35rem; }
+.rul-value { color: var(--status-normal); font-family: var(--font-mono); font-size: 2.2rem; line-height: 1; }
+.rul-unit { color: var(--text-secondary); font-family: var(--font-mono); font-size: 0.82rem; }
+.diagnostic-text { min-height: 2.7rem; margin: 1rem 0 1.25rem; color: var(--text-primary); font-size: 0.82rem; line-height: 1.55; }
+.rul-card-footer { padding-top: 0.6rem; border-top: 1px solid var(--border-subtle); color: var(--text-muted); font-family: var(--font-mono); font-size: 0.68rem; }
+.model-predictions-card { margin-top: 0; padding: 1rem; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); }
+.model-predictions-card h3 { margin: 0; color: var(--text-primary); font-size: 0.86rem; }
+.model-list { display: grid; gap: 0.55rem; margin-top: 0.9rem; }
+.model-row { display: grid; grid-template-columns: minmax(110px, 0.9fr) minmax(80px, 1.5fr) auto; align-items: center; gap: 0.6rem; }
+.model-label { overflow: hidden; color: var(--text-secondary); font-size: 0.7rem; text-overflow: ellipsis; white-space: nowrap; }
+.model-bar { height: 14px; overflow: hidden; background: #292929; border: 1px solid #454545; border-radius: 0; }
+.model-bar span { display: block; height: 100%; background: #179b52; border-radius: 0; transition: width 0.35s ease; }
+.model-value { min-width: 3.5rem; color: var(--text-primary); font-family: var(--font-mono); font-size: 0.72rem; text-align: right; }
+.empty-state { margin: 0.75rem 0 0; color: var(--text-muted); font-size: 0.8rem; }
+
+@media (max-width: 560px) { .rul-card-header { align-items: start; flex-direction: column; } }

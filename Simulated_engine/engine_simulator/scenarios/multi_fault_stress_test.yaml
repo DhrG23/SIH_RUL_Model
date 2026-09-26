@@ -1,0 +1,43 @@
+# Multi-Fault Stress Test Mission Scenario
+# 90-second mission combining altitude climb, operating changes, and multiple progressive faults.
+
+simulation:
+  duration_ms: 90000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 10000.0
+  temperature_c: 15.0
+  humidity_pct: 50.0
+  wind_speed_mph: 25.0
+  wind_direction_deg: 180.0
+  throttle_pct: 35.0
+  engine_rpm: 3200.0
+  engine_load_pct: 45.0
+
+environment_events:
+  - time_ms: 10000
+    parameter: "altitude"
+    target_value: 20000.0
+    duration_ms: 20000
+  - time_ms: 10000
+    parameter: "temperature"
+    target_value: -5.0
+    duration_ms: 20000
+
+operating_condition_changes:
+  - time_ms: 12000
+    parameter: "throttle"
+    target_value: 65.0
+    duration_ms: 5000
+  - time_ms: 50000
+    parameter: "throttle"
+    target_value: 40.0
+    duration_ms: 4000
+
+fault_files:
+  - "lubrication_degradation.yaml"
+  - "oil_pump_degradation.yaml"
+  - "cooling_degradation.yaml"

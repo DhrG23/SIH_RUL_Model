@@ -1,0 +1,40 @@
+<section class="gauge-cluster">
+  <div class="gauges-grid">
+    @for (g of gauges; track g.key) {
+      @let val = getParamValue(g.key);
+      @let status = getGaugeStatus(g, val);
+      @let series = getSeries(g.key);
+      @let last = getLastPoint(series, g.min, g.max);
+
+      <article class="gauge-card" [ngClass]="'status-' + status">
+        <div class="gauge-card-header">
+          <div class="gauge-titles">
+            <span class="gauge-name">{{ g.label }}</span>
+          </div>
+          <div class="current-reading">
+            <span class="val-num">{{ val.toFixed(g.decimals) }}</span>
+            <span class="val-unit">{{ g.unit }}</span>
+          </div>
+        </div>
+
+        <div class="chart-wrapper">
+          <svg viewBox="0 0 480 150" class="line-chart" preserveAspectRatio="none">
+            <line x1="8" y1="8" x2="472" y2="8" class="chart-gridline" />
+            <line x1="8" y1="75" x2="472" y2="75" class="chart-gridline" />
+            <line x1="8" y1="142" x2="472" y2="142" class="chart-gridline" />
+            <path [attr.d]="getChartPath(series, g.min, g.max)" class="chart-line" [ngClass]="'line-' + status" />
+            <circle [attr.cx]="last.x" [attr.cy]="last.y" r="4" class="chart-point" [ngClass]="'point-' + status" />
+          </svg>
+        </div>
+
+        <div class="gauge-card-footer">
+          <span class="bound-val">{{ g.min }} {{ g.unit }}</span>
+          <span class="margin-status" [ngClass]="'text-' + status">
+            {{ status === 'normal' ? 'Nominal' : status === 'caution' ? 'Caution' : 'Critical' }}
+          </span>
+          <span class="bound-val">{{ g.max }} {{ g.unit }}</span>
+        </div>
+      </article>
+    }
+  </div>
+</section>

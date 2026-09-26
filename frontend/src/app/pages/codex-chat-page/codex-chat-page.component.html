@@ -1,0 +1,34 @@
+<section class="chat-page page-layout">
+  <header class="page-intro">
+    <div>
+      <p class="eyebrow">AI ChatBot</p>
+      <h1>Engine assistant</h1>
+      <p class="page-description">Ask about current telemetry, health margins, active diagnostics, or mission conditions.</p>
+    </div>
+    <span class="local-badge">AI ASSISTANT</span>
+  </header>
+
+  <div class="chat-shell">
+    <div class="message-list" aria-live="polite">
+      @for (message of messages(); track $index) {
+        <article class="message" [class.operator]="message.role === 'operator'">
+          <span class="message-role">{{ message.role === 'operator' ? 'Operator' : 'Assistant' }}</span>
+          <p>{{ message.text }}</p>
+        </article>
+      }
+      @if (isSending()) {
+        <article class="message"><span class="message-role">Assistant</span><p class="thinking">Reviewing live telemetry…</p></article>
+      }
+    </div>
+
+    @if (error()) { <p class="chat-error">{{ error() }}</p> }
+
+    <form class="chat-composer" (ngSubmit)="send()">
+      <label for="codex-question">Ask the assistant about the engine</label>
+      <div class="composer-row">
+        <textarea id="codex-question" name="question" [ngModel]="draft()" (ngModelChange)="draft.set($event)" [disabled]="isSending()" placeholder="For example: What is the most important engine risk right now?" rows="3"></textarea>
+        <button type="submit" [disabled]="!draft().trim() || isSending()">{{ isSending() ? 'Asking…' : 'Ask assistant' }}</button>
+      </div>
+    </form>
+  </div>
+</section>

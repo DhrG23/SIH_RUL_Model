@@ -1,0 +1,26 @@
+# Fuel Injector Degradation and Misfire Mission Scenario
+# Sequence: Progressive injector nozzle clogging (12-36s) followed by combustion misfire abnormality (25-55s).
+# Physics Response: Lean mixture (high AFR) -> Power loss -> Sudden spike in vibration acceleration (g-RMS).
+
+simulation:
+  duration_ms: 60000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 10000.0
+  temperature_c: 15.0
+  humidity_pct: 50.0
+  wind_speed_mph: 25.0
+  wind_direction_deg: 180.0
+  throttle_pct: 42.0
+  engine_rpm: 3400.0
+  engine_load_pct: 45.0
+
+environment_events: []
+operating_condition_changes: []
+
+fault_files:
+  - "injector_degradation.yaml"
+  - "combustion_abnormality.yaml"

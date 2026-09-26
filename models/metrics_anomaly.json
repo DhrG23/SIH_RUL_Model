@@ -1,0 +1,9 @@
+{
+  "roc_auc": 0.931,
+  "precision_of_flagged_rows": 0.951,
+  "recall_of_faulty_rows": 0.74,
+  "n_healthy_train_rows": 17691,
+  "n_test_rows": 5101,
+  "n_test_rows_flagged": 1426,
+  "note": "Trained ONLY on healthy rows, with zero fault labels. Evaluated post-hoc against known fault labels purely to report an honest number -- the detector itself never used those labels to learn."
+}

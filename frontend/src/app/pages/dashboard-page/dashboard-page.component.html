@@ -1,0 +1,63 @@
+<div class="page-layout">
+  <header class="page-intro">
+    <div>
+      <span class="eyebrow">DRDO PS 26054 · PROPULSION HEALTH</span>
+      <h1>{{ pageTitle() }}</h1>
+      <p class="page-description">{{ pageDescription() }}</p>
+    </div>
+    @if (view() === 'overview') {
+      <div class="intro-context">
+        <span class="context-label">LIVE ENGINE STATE</span>
+        <span class="context-value">{{ store.mission()?.engine_operating_state ?? 'Awaiting telemetry' }}</span>
+        <span class="context-dot" [class.is-live]="connectionState() === 'CONNECTED'"></span>
+      </div>
+    }
+  </header>
+
+  @switch (view()) {
+    @case ('overview') {
+      <div class="overview-layout">
+        <section class="overview-hero">
+          <div class="overview-visual-column">
+            <app-engine-3d-view />
+          </div>
+          <div class="overview-command-column">
+            <app-engine-health />
+            <app-mission-panel />
+            <app-rul-predictions />
+          </div>
+        </section>
+
+        <section class="overview-section">
+          <div class="section-heading">
+            <div>
+              <span class="section-kicker">LIVE SENSOR ARRAY</span>
+              <h2>Engine operating parameters</h2>
+            </div>
+            <span class="section-note">RPM · thermal · lubrication · combustion · electrical</span>
+          </div>
+          <app-gauge-cluster />
+        </section>
+
+        <section class="overview-lower">
+          <app-alert-panel />
+          <app-model-accuracy />
+        </section>
+      </div>
+    }
+    @case ('telemetry') {
+      <section class="workspace-panel telemetry-panel"><app-telemetry-grid /></section>
+    }
+    @case ('gauges') {
+      <section class="workspace-panel"><app-gauge-cluster /></section>
+    }
+    @case ('charts') {
+      <section class="workspace-panel full-panel chart-panel"><app-telemetry-charts /></section>
+    }
+    @case ('diagnostics') {
+      <div class="diagnostics-layout">
+        <section class="workspace-panel"><app-alert-panel /></section>
+      </div>
+    }
+  }
+</div>

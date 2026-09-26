@@ -1,0 +1,156 @@
+:host {
+  display: block;
+}
+
+.telemetry-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: 0.9rem 1.1rem 0.65rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto auto;
+  gap: 0.45rem 0.75rem;
+  min-height: 76px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+  user-select: none;
+}
+
+.telemetry-card:hover {
+  background: var(--bg-hover);
+  border-color: var(--text-muted);
+}
+
+.telemetry-card.is-selected {
+  border-color: var(--accent-primary);
+  box-shadow: 0 0 0 1px var(--accent-primary);
+  background: var(--accent-subtle);
+}
+
+.telemetry-card.list-mode {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  min-height: 58px;
+  padding: 0.65rem 0.9rem;
+  grid-template-columns: minmax(170px, 1.4fr) minmax(130px, 1fr) 80px;
+  grid-template-rows: 1fr;
+  align-items: center;
+}
+
+.telemetry-card.list-mode .card-header,
+.telemetry-card.list-mode .card-middle {
+  grid-column: auto;
+}
+
+.telemetry-card.list-mode .trend-indicator { justify-self: end; }
+
+@media (max-width: 600px) {
+  .telemetry-card.list-mode {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: auto auto;
+  }
+  .telemetry-card.list-mode .card-middle { grid-column: 1 / -1; }
+}
+
+/* Card Header */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  grid-column: 1 / -1;
+}
+
+.param-label {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.status-tag {
+  font-size: 0.6rem;
+  font-weight: 600;
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+.tag-caution {
+  background: var(--status-caution-bg);
+  color: var(--status-caution);
+  border: 1px solid var(--status-caution-border);
+}
+
+.tag-critical, .tag-warning {
+  background: var(--status-critical-bg);
+  color: var(--status-critical);
+  border: 1px solid var(--status-critical-border);
+}
+
+/* Middle: Value & Trend */
+.card-middle {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  min-width: 0;
+}
+
+.value-group {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+}
+
+.val-num {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.val-unit {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.trend-indicator {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.trend-rising {
+  color: var(--status-caution);
+}
+
+.trend-falling {
+  color: var(--accent-primary);
+}
+
+.trend-stable {
+  color: var(--text-muted);
+  opacity: 0.35;
+}
+
+/* Abnormal status treatments */
+.status-caution {
+  border-color: var(--status-caution-border);
+}
+
+.status-warning, .status-critical {
+  border-color: var(--status-critical-border);
+}
+
+.status-unavailable {
+  opacity: 0.45;
+}
+

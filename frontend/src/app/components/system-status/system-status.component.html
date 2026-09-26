@@ -1,0 +1,76 @@
+<div class="system-container">
+  <div class="card-header">
+    <div class="header-titles">
+      <h3 class="section-title">Telemetry & System Architecture</h3>
+      <span class="header-sub">Transport integrity monitoring</span>
+    </div>
+    <button type="button" class="reconnect-btn" (click)="reconnectManually()">
+      Reconnect WebSocket
+    </button>
+  </div>
+
+  <div class="status-grid">
+    <!-- Telemetry WebSocket -->
+    <div class="status-item">
+      <span class="status-lbl">WebSocket Transport</span>
+      <div class="status-indicator">
+        <span class="dot" [class.dot-connected]="connectionState() === 'CONNECTED'" [class.dot-stale]="connectionState() === 'STALE'" [class.dot-disconnected]="connectionState() !== 'CONNECTED' && connectionState() !== 'STALE'"></span>
+        <span class="status-text">{{ connectionState() }}</span>
+      </div>
+    </div>
+
+    <!-- Telemetry frequency -->
+    <div class="status-item">
+      <span class="status-lbl">Sample Frequency</span>
+      <span class="status-val mono">{{ telemetryRate() }} Hz</span>
+    </div>
+
+    <!-- Last receipt -->
+    <div class="status-item">
+      <span class="status-lbl">Packet Freshness</span>
+      <span class="status-val mono">{{ lastReceivedText() }}</span>
+    </div>
+
+    <!-- Total Ingested -->
+    <div class="status-item">
+      <span class="status-lbl">Total Packets Ingested</span>
+      <span class="status-val mono">{{ packetsReceived().toLocaleString() }}</span>
+    </div>
+
+    <!-- Simulator Engine -->
+    <div class="status-item">
+      <span class="status-lbl">Physics Simulator</span>
+      <div class="status-indicator">
+        <span class="dot dot-connected"></span>
+        <span class="status-text">{{ backendStatus() }}</span>
+      </div>
+    </div>
+
+    <!-- 3D Twin Graphics -->
+    <div class="status-item">
+      <span class="status-lbl">3D Twin Rendering</span>
+      <div class="status-indicator">
+        <span class="dot dot-connected"></span>
+        <span class="status-text">Three.js WebGL</span>
+      </div>
+    </div>
+
+    <!-- ML Diagnostics -->
+    <div class="status-item">
+      <span class="status-lbl">ML Diagnostics Model</span>
+      <div class="status-indicator">
+        <span class="dot dot-muted"></span>
+        <span class="status-text muted">Deferred for future</span>
+      </div>
+    </div>
+
+    <!-- AI Advisor -->
+    <div class="status-item">
+      <span class="status-lbl">AI Explanation Layer</span>
+      <div class="status-indicator">
+        <span class="dot dot-muted"></span>
+        <span class="status-text muted">Deferred for future</span>
+      </div>
+    </div>
+  </div>
+</div>

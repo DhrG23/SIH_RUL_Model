@@ -1,0 +1,101 @@
+<div class="replay-page">
+  <header class="page-intro replay-intro">
+    <div>
+      <p class="eyebrow">Flight data recorder</p>
+      <h1>Mission replay</h1>
+      <p class="page-description">Replay real exported physics-simulation runs and trace engine health and fault progression tick by tick.</p>
+    </div>
+    @if (missionData()) {
+      <div class="recording-status"><span class="status-dot"></span> Recorded run <strong>{{ formatTime(missionData()!.durationMs) }}</strong></div>
+    }
+  </header>
+
+  @if (error()) {
+    <div class="replay-error">{{ error() }}</div>
+  }
+
+  @if (!error() && missionList().length > 0) {
+    <section class="replay-toolbar" aria-label="Replay selection and controls">
+      <label class="mission-select">
+        <span>Mission record</span>
+        <select [value]="selectedMissionId()" (change)="selectMission($any($event.target).value)">
+          @for (mission of missionList(); track mission.id) {
+            <option [value]="mission.id">{{ mission.label }}</option>
+          }
+        </select>
+      </label>
+      @if (missionData()) {
+        <div class="mission-meta">
+          <span>{{ missionData()!.samples }} samples</span>
+          <span class="meta-divider"></span>
+          <span>{{ formatTime(missionData()!.durationMs) }} duration</span>
+        </div>
+      }
+    </section>
+  }
+
+  @if (loading() && !missionData()) {
+    <div class="replay-loading">Loading real mission telemetry…</div>
+  }
+
+  @if (missionData() && currentSample(); as sample) {
+    <div class="replay-grid">
+      <section class="telemetry-panel">
+        <div class="panel-heading"><div><p class="eyebrow">Engine snapshot</p><h2>Telemetry at {{ formatTime(sample.timeMs) }}</h2></div><span class="sample-tag">SAMPLE {{ (currentIndex() + 1).toString().padStart(4, '0') }}</span></div>
+        <div class="metrics-grid">
+          <article class="metric"><span>Engine RPM</span><strong>{{ formatNumber(sample.rpm) }}</strong><small>rpm</small><i class="metric-accent blue"></i></article>
+          <article class="metric"><span>Fuel flow rate</span><strong>{{ formatNumber(sample.fuelFlowKgH, 1) }}</strong><small>kg/h</small><i class="metric-accent amber"></i></article>
+          <article class="metric"><span>Oil temperature</span><strong>{{ formatNumber(sample.oilTemp, 1) }}</strong><small>°C</small><i class="metric-accent red"></i></article>
+          <article class="metric"><span>Oil pressure</span><strong>{{ formatNumber(sample.oilPressure, 1) }}</strong><small>psi</small><i class="metric-accent green"></i></article>
+          <article class="metric"><span>Exhaust gas temp</span><strong>{{ formatNumber(sample.egt) }}</strong><small>°C</small><i class="metric-accent red"></i></article>
+          <article class="metric"><span>Cylinder head temp</span><strong>{{ formatNumber(sample.cht, 1) }}</strong><small>°C</small><i class="metric-accent green"></i></article>
+          <article class="metric"><span>Vibration level</span><strong>{{ formatNumber(sample.vibration, 2) }}</strong><small>g RMS</small><i class="metric-accent amber"></i></article>
+          <article class="metric"><span>Altitude</span><strong>{{ formatNumber(sample.altitude) }}</strong><small>ft MSL</small><i class="metric-accent blue"></i></article>
+        </div>
+      </section>
+
+      <section class="trajectory-panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">Ground-truth health</p><h2>Health &amp; fault timeline</h2></div>
+          <span class="coordinate-readout" [class.fault-active]="sample.primaryFault !== 'nominal'">{{ faultLabel(sample.primaryFault) }}</span>
+        </div>
+        <div class="map-frame">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Overall engine health over the course of the mission, 100% at top to 0% at bottom">
+            <defs><pattern id="map-grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.18" /></pattern></defs>
+            <rect width="100" height="100" fill="url(#map-grid)" />
+            <line x1="0" y1="25" x2="100" y2="25" class="axis-line" /><line x1="0" y1="50" x2="100" y2="50" class="axis-line" /><line x1="0" y1="75" x2="100" y2="75" class="axis-line" />
+            <polygon [attr.points]="healthAreaPoints()" class="health-area" />
+            <polyline [attr.points]="healthLinePoints()" class="health-line" />
+            <circle [attr.cx]="playheadX()" [attr.cy]="playheadY()" r="1.6" class="current-node" />
+          </svg>
+          <span class="axis-label axis-x">MISSION ELAPSED →</span><span class="axis-label axis-y">HEALTH % ↑</span>
+        </div>
+        <footer class="trajectory-footer">
+          <span>Cooling {{ formatNumber(sample.coolingHealth * 100) }}%</span>
+          <span>Lubrication {{ formatNumber(sample.lubricationHealth * 100) }}%</span>
+          <span>Injector {{ formatNumber(sample.injectorHealth * 100) }}%</span>
+          <span>Combustion {{ formatNumber(sample.combustionHealth * 100) }}%</span>
+          <strong>Overall {{ formatNumber(sample.overallHealth * 100) }}%</strong>
+        </footer>
+      </section>
+    </div>
+
+    <section class="playback-panel playback-panel-bottom">
+      <div class="transport-controls">
+        <button class="transport-button" type="button" (click)="skip(-20)" aria-label="Go back" title="Go back"><span>↶</span><small>back</small></button>
+        <button class="play-button" type="button" (click)="togglePlayback()" [attr.aria-label]="isPlaying() ? 'Pause replay' : 'Play replay'">{{ isPlaying() ? 'Ⅱ' : '▶' }}</button>
+        <button class="transport-button" type="button" (click)="skip(20)" aria-label="Go forward" title="Go forward"><span>↷</span><small>fwd</small></button>
+        <div class="time-readout"><strong>{{ formatTime(sample.timeMs) }}</strong><span>/ {{ formatTime(missionData()!.durationMs) }}</span></div>
+      </div>
+      <div class="timeline-wrap">
+        <input class="timeline" type="range" min="0" [max]="missionData()!.data.length - 1" [value]="currentIndex()" [style.--progress]="progress() + '%'" (input)="seek($event)" aria-label="Replay position">
+      </div>
+      <div class="speed-control" aria-label="Playback speed">
+        <span>Speed</span>
+        @for (speed of playbackSpeeds; track speed) {
+          <button type="button" [class.selected]="playbackSpeed() === speed" (click)="setSpeed(speed)">{{ speed }}x</button>
+        }
+      </div>
+    </section>
+  }
+</div>

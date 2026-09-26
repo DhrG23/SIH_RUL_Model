@@ -1,0 +1,18 @@
+# Combustion Abnormality Fault Configuration
+# Physical Impact: Cylinder misfire and timing retard -> Sharp drop in torque, massive vibration spike.
+fault_type: "combustion_abnormality"
+description: "Ignition system degradation causing intermittent misfire events and timing retard."
+
+start_time_ms: 25000
+end_time_ms: 55000
+severity_start: 0.0
+severity_end: 0.50
+progression_curve: "sigmoid"
+
+# Latent physical parameters scaled by the progression severity
+affected_parameters:
+  misfire_fraction: 0.35
+  timing_retard_deg: 8.0
+
+config:
+  vibration_alarm_g_rms: 3.5
