@@ -9,8 +9,8 @@
 // block it as mixed content.
 export const environment = {
   production: true,
-  wsUrl: 'wss://YOUR-BACKEND.onrender.com/ws/telemetry',
-  httpUrl: 'https://YOUR-BACKEND.onrender.com',
+  wsUrl: 'wss://sih-rul-model.onrender.com//ws/telemetry',
+  httpUrl: 'https://sih-rul-model.onrender.com/',
   staleThresholdMs: 2000,
   maxReconnectAttempts: 10,
   initialReconnectDelayMs: 1000,
