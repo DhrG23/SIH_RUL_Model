@@ -1,0 +1,25 @@
+# Oil Pump Failure Mission Scenario
+# 60-second cruise mission introducing progressive oil pump mechanical wear.
+# Physics Response: Reduced pump volumetric delivery -> Progressive oil pressure collapse.
+
+simulation:
+  duration_ms: 60000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 10000.0
+  temperature_c: 15.0
+  humidity_pct: 50.0
+  wind_speed_mph: 25.0
+  wind_direction_deg: 180.0
+  throttle_pct: 40.0
+  engine_rpm: 3300.0
+  engine_load_pct: 45.0
+
+environment_events: []
+operating_condition_changes: []
+
+fault_files:
+  - "oil_pump_degradation.yaml"

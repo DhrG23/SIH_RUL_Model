@@ -1,0 +1,18 @@
+# Fuel Injector Degradation Fault Configuration
+# Physical Impact: Restricted fuel flow -> Lean AFR -> Drop in power, altered EGT, reduced injector health.
+fault_type: "injector_degradation"
+description: "Progressive injector nozzle deposit buildup restricting fuel delivery."
+
+start_time_ms: 12000
+end_time_ms: 36000
+severity_start: 0.0
+severity_end: 0.65
+progression_curve: "linear"
+
+# Latent physical parameters scaled by the progression severity
+affected_parameters:
+  clogging_fraction: 0.45
+  leakage_fraction: 0.00
+
+config:
+  lean_afr_limit: 18.0

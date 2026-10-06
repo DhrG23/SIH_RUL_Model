@@ -1,0 +1,50 @@
+# Endurance Mission Scenario
+# DRDO SIH26054 explicitly names "Endurance mission" as a required simulation
+# capability -- long-duration ISR/surveillance patrol behavior, distinct from the
+# 60-90s fault-demo scenarios elsewhere in this folder. 10-minute sustained cruise
+# with a realistic climb-cruise-loiter profile and no injected fault, so the dashboard
+# can demonstrate long-duration trend/health monitoring (src/trend_analysis.py-style
+# significance testing has real time to show a genuine slow trend vs. noise) rather
+# than a short, fault-driven trajectory.
+
+simulation:
+  duration_ms: 600000          # 10 minutes -- meaningfully longer than every other scenario
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 8000.0
+  temperature_c: 12.0
+  humidity_pct: 45.0
+  wind_speed_mph: 20.0
+  wind_direction_deg: 200.0
+  throttle_pct: 32.0            # low-power climb-out
+  engine_rpm: 2900.0
+  engine_load_pct: 38.0
+
+environment_events:
+  - time_ms: 60000
+    parameter: "altitude"
+    target_value: 13000.0       # climb to patrol/loiter altitude
+    duration_ms: 90000
+  - time_ms: 480000
+    parameter: "altitude"
+    target_value: 9000.0        # descent toward the end of the patrol
+    duration_ms: 60000
+
+operating_condition_changes:
+  - time_ms: 60000
+    parameter: "throttle"
+    target_value: 42.0          # settle into steady cruise/loiter power
+    duration_ms: 30000
+  - time_ms: 300000
+    parameter: "throttle"
+    target_value: 38.0          # minor mid-mission power trim, still steady-state
+    duration_ms: 20000
+  - time_ms: 480000
+    parameter: "throttle"
+    target_value: 30.0          # power-back for descent
+    duration_ms: 30000
+
+fault_files: []

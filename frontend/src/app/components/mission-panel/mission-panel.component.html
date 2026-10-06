@@ -1,0 +1,38 @@
+<div class="mission-container">
+  <div class="card-header">
+    <h3 class="section-title">Flight & Environment</h3>
+    <span class="phase-chip">{{ mission()?.mission_phase ?? 'Ingress' }}</span>
+  </div>
+
+  <div class="mission-grid">
+    <div class="field-item">
+      <span class="field-label">Elapsed Time</span>
+      <span class="field-value mono">{{ elapsedFormatted() }}</span>
+    </div>
+
+    <div class="field-item">
+      <span class="field-label">Altitude</span>
+      <span class="field-value">{{ mission()?.altitude_ft !== undefined ? mission()?.altitude_ft?.toFixed(0) : '—' }} <span class="unit">ft</span></span>
+    </div>
+
+    <div class="field-item">
+      <span class="field-label">Ambient Temp</span>
+      <span class="field-value">{{ mission()?.ambient_temp_c !== undefined ? mission()?.ambient_temp_c?.toFixed(1) : '—' }} <span class="unit">°C</span></span>
+    </div>
+
+    <div class="field-item">
+      <span class="field-label">Engine Load</span>
+      <span class="field-value">{{ mission()?.engine_load_pct !== undefined ? mission()?.engine_load_pct?.toFixed(1) : '—' }} <span class="unit">%</span></span>
+    </div>
+
+    <div class="field-item">
+      <span class="field-label">Operating State</span>
+      <span class="field-value">{{ mission()?.engine_operating_state ?? 'Awaiting data' }}</span>
+    </div>
+
+    <div class="field-item">
+      <span class="field-label">Mission ID</span>
+      <span class="field-value mono">{{ mission()?.mission_id ?? 'ALPHA' }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,210 @@
+<div class="replay-page">
+  <header class="page-intro replay-intro">
+    <div>
+      <p class="eyebrow">Flight data recorder</p>
+      <h1>Mission replay</h1>
+      <p class="page-description">Replay real exported physics-simulation runs and trace engine health and fault progression tick by tick.</p>
+    </div>
+    @if (missionData()) {
+      <div class="recording-status"><span class="status-dot"></span> Recorded run <strong>{{ formatTime(missionData()!.durationMs) }}</strong></div>
+    }
+  </header>
+
+  @if (error()) {
+    <div class="replay-error">{{ error() }}</div>
+  }
+
+  @if (!error() && missionList().length > 0) {
+    <section class="replay-toolbar" aria-label="Replay selection and controls">
+      <label class="mission-select">
+        <span>Mission record</span>
+        <select [value]="selectedMissionId()" (change)="selectMission($any($event.target).value)">
+          @for (mission of missionList(); track mission.id) {
+            <option [value]="mission.id">{{ mission.label }}</option>
+          }
+        </select>
+      </label>
+      @if (missionData()) {
+        <div class="mission-meta">
+          <span>{{ missionData()!.samples }} samples</span>
+          <span class="meta-divider"></span>
+          <span>{{ formatTime(missionData()!.durationMs) }} duration</span>
+        </div>
+        <button type="button" class="report-trigger" (click)="openReport()">📋 View mission report</button>
+      }
+    </section>
+  }
+
+  @if (loading() && !missionData()) {
+    <div class="replay-loading">Loading real mission telemetry…</div>
+  }
+
+  @if (missionData() && currentSample(); as sample) {
+    <div class="replay-grid">
+      <section class="telemetry-panel">
+        <div class="panel-heading"><div><p class="eyebrow">Engine snapshot</p><h2>Telemetry at {{ formatTime(sample.timeMs) }}</h2></div><span class="sample-tag">SAMPLE {{ (currentIndex() + 1).toString().padStart(4, '0') }}</span></div>
+        <div class="metrics-grid">
+          <article class="metric"><span>Engine RPM</span><strong>{{ formatNumber(sample.rpm) }}</strong><small>rpm</small><i class="metric-accent blue"></i></article>
+          <article class="metric"><span>Fuel flow rate</span><strong>{{ formatNumber(sample.fuelFlowKgH, 1) }}</strong><small>kg/h</small><i class="metric-accent amber"></i></article>
+          <article class="metric"><span>Oil temperature</span><strong>{{ formatNumber(sample.oilTemp, 1) }}</strong><small>°C</small><i class="metric-accent red"></i></article>
+          <article class="metric"><span>Oil pressure</span><strong>{{ formatNumber(sample.oilPressure, 1) }}</strong><small>psi</small><i class="metric-accent green"></i></article>
+          <article class="metric"><span>Exhaust gas temp</span><strong>{{ formatNumber(sample.egt) }}</strong><small>°C</small><i class="metric-accent red"></i></article>
+          <article class="metric"><span>Cylinder head temp</span><strong>{{ formatNumber(sample.cht, 1) }}</strong><small>°C</small><i class="metric-accent green"></i></article>
+          <article class="metric"><span>Vibration level</span><strong>{{ formatNumber(sample.vibration, 2) }}</strong><small>g RMS</small><i class="metric-accent amber"></i></article>
+          <article class="metric"><span>Altitude</span><strong>{{ formatNumber(sample.altitude) }}</strong><small>ft MSL</small><i class="metric-accent blue"></i></article>
+        </div>
+      </section>
+
+      <section class="trajectory-panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">Ground-truth health</p><h2>Health &amp; fault timeline</h2></div>
+          <span class="coordinate-readout" [class.fault-active]="sample.primaryFault !== 'nominal'">{{ faultLabel(sample.primaryFault) }}</span>
+        </div>
+        <div class="map-frame">
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" role="img" aria-label="Overall engine health over the course of the mission, 100% at top to 0% at bottom">
+            <defs><pattern id="map-grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.18" /></pattern></defs>
+            <rect width="100" height="100" fill="url(#map-grid)" />
+            <line x1="0" y1="25" x2="100" y2="25" class="axis-line" /><line x1="0" y1="50" x2="100" y2="50" class="axis-line" /><line x1="0" y1="75" x2="100" y2="75" class="axis-line" />
+            <polygon [attr.points]="healthAreaPoints()" class="health-area" />
+            <polyline [attr.points]="healthLinePoints()" class="health-line" />
+            <circle [attr.cx]="playheadX()" [attr.cy]="playheadY()" r="1.6" class="current-node" />
+          </svg>
+          <span class="axis-label axis-x">MISSION ELAPSED →</span><span class="axis-label axis-y">HEALTH % ↑</span>
+        </div>
+        <footer class="trajectory-footer">
+          <span>Cooling {{ formatNumber(sample.coolingHealth * 100) }}%</span>
+          <span>Lubrication {{ formatNumber(sample.lubricationHealth * 100) }}%</span>
+          <span>Injector {{ formatNumber(sample.injectorHealth * 100) }}%</span>
+          <span>Combustion {{ formatNumber(sample.combustionHealth * 100) }}%</span>
+          <strong>Overall {{ formatNumber(sample.overallHealth * 100) }}%</strong>
+        </footer>
+      </section>
+    </div>
+
+    <section class="playback-panel playback-panel-bottom">
+      <div class="transport-controls">
+        <button class="transport-button" type="button" (click)="skip(-20)" aria-label="Go back" title="Go back"><span>↶</span><small>back</small></button>
+        <button class="play-button" type="button" (click)="togglePlayback()" [attr.aria-label]="isPlaying() ? 'Pause replay' : 'Play replay'">{{ isPlaying() ? 'Ⅱ' : '▶' }}</button>
+        <button class="transport-button" type="button" (click)="skip(20)" aria-label="Go forward" title="Go forward"><span>↷</span><small>fwd</small></button>
+        <div class="time-readout"><strong>{{ formatTime(sample.timeMs) }}</strong><span>/ {{ formatTime(missionData()!.durationMs) }}</span></div>
+      </div>
+      <div class="timeline-wrap">
+        <input class="timeline" type="range" min="0" [max]="missionData()!.data.length - 1" [value]="currentIndex()" [style.--progress]="progress() + '%'" (input)="seek($event)" aria-label="Replay position">
+      </div>
+      <div class="speed-control" aria-label="Playback speed">
+        <span>Speed</span>
+        @for (speed of playbackSpeeds; track speed) {
+          <button type="button" [class.selected]="playbackSpeed() === speed" (click)="setSpeed(speed)">{{ speed }}x</button>
+        }
+      </div>
+    </section>
+  }
+</div>
+
+@if (reportOpen()) {
+  <div class="report-overlay" (click)="closeReport()">
+    <div class="report-modal" (click)="$event.stopPropagation()" role="dialog" aria-modal="true" aria-label="Mission health report">
+      <header class="report-header">
+        <div>
+          <p class="eyebrow">Post-flight summary</p>
+          <h2>Mission-wise health report</h2>
+        </div>
+        <div class="report-header-actions">
+          <button type="button" class="print-button" (click)="printReport()" [disabled]="!report()">🖨 Print / Save as PDF</button>
+          <button type="button" class="close-button" (click)="closeReport()" aria-label="Close report">✕</button>
+        </div>
+      </header>
+
+      @if (reportLoading()) {
+        <div class="report-loading">Replaying the full mission through the fault classifier and drift detector…</div>
+      }
+      @if (reportError()) {
+        <div class="report-error">{{ reportError() }}</div>
+      }
+
+      @if (report(); as r) {
+        <div class="report-body">
+          <section class="report-summary-row">
+            <article class="report-stat"><span>Mission</span><strong>{{ r.label }}</strong></article>
+            <article class="report-stat"><span>Duration</span><strong>{{ formatTime(r.duration_ms) }}</strong></article>
+            <article class="report-stat"><span>Samples</span><strong>{{ r.samples }}</strong></article>
+            <article class="report-stat"
+                     [class.status-good]="(r.health_summary['overall_engine_health']?.end ?? 1) > 0.6"
+                     [class.status-bad]="(r.health_summary['overall_engine_health']?.end ?? 1) <= 0.6">
+              <span>Final health</span><strong>{{ asPercent(r.health_summary['overall_engine_health']?.end) }}</strong>
+            </article>
+          </section>
+
+          <section class="report-section">
+            <h3>Subsystem health (start → end, mission minimum)</h3>
+            <div class="health-grid">
+              @for (entry of r.health_summary | keyvalue; track entry.key) {
+                <article class="health-cell">
+                  <span>{{ entry.value.label }}</span>
+                  <strong>{{ asPercent(entry.value.start) }} → {{ asPercent(entry.value.end) }}</strong>
+                  <small>min {{ asPercent(entry.value.min) }}</small>
+                </article>
+              }
+            </div>
+          </section>
+
+          <section class="report-section">
+            <h3>Ground-truth fault timeline</h3>
+            <p class="section-note">The simulator's own authoritative record of what was actually injected — meaningful for this replay/validation demo, not a real deployment.</p>
+            <ul class="timeline-list">
+              @for (entry of r.ground_truth_fault_timeline; track $index) {
+                <li [class.fault-row]="entry.fault !== 'nominal'">
+                  <strong>{{ faultLabel(entry.fault) }}</strong>
+                  <span>{{ formatTime(entry.start_ms) }} – {{ formatTime(entry.end_ms) }}</span>
+                  <span>peak severity {{ (entry.peak_severity * 100).toFixed(0) }}%</span>
+                </li>
+              }
+            </ul>
+          </section>
+
+          <section class="report-section">
+            <h3>AI diagnosis — model detections, blind to ground truth</h3>
+            @if (confirmedAiFaults().length === 0 && driftAlerts().length === 0) {
+              <p class="section-note">No fault or sensor-drift confirmations during this mission.</p>
+            } @else {
+              @if (confirmedAiFaults().length > 0) {
+                <ul class="timeline-list">
+                  @for (event of confirmedAiFaults(); track event.fault) {
+                    <li class="fault-row"><strong>{{ event.fault }}</strong><span>detected by the live fault classifier</span></li>
+                  }
+                </ul>
+              }
+              @if (driftAlerts().length > 0) {
+                <p class="section-note">⚠ {{ driftAlerts().length }} sensor-drift alert(s) — see report note below on offline-replay channels.</p>
+              }
+            }
+          </section>
+
+          <section class="report-section">
+            <h3>Sensor trends across the full mission</h3>
+            <div class="sensor-trend-grid">
+              @for (entry of r.sensor_summary | keyvalue; track entry.key) {
+                <article class="sensor-trend-cell">
+                  <span>{{ entry.value.label }}</span>
+                  <strong>{{ entry.value.final }} <small>{{ trendIcon(entry.value.trend_direction) }} {{ entry.value.trend_direction }}</small></strong>
+                  <small>range {{ entry.value.min }} – {{ entry.value.max }} · r² {{ entry.value.trend_r_squared }}</small>
+                </article>
+              }
+            </div>
+          </section>
+
+          <section class="report-section">
+            <h3>Maintenance advisory</h3>
+            <ul class="advisory-list">
+              @for (item of r.maintenance_advisory; track item.fault) {
+                <li [style.borderLeftColor]="item.color"><strong>{{ item.fault }}</strong><span>{{ item.meaning }}</span></li>
+              }
+            </ul>
+          </section>
+
+          <p class="report-note">{{ r.note }}</p>
+        </div>
+      }
+    </div>
+  </div>
+}

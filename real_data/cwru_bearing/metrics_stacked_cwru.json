@@ -1,0 +1,20 @@
+{
+  "baseline_de_only": {
+    "accuracy": 0.575,
+    "macro_f1": 0.398
+  },
+  "stacked_de_fe": {
+    "accuracy": 0.755,
+    "macro_f1": 0.549
+  },
+  "accuracy_improvement_pp": 18.0,
+  "verdict": "IMPROVES on",
+  "classes": [
+    "Ball Fault",
+    "Inner Race Fault",
+    "Normal",
+    "Outer Race Fault"
+  ],
+  "n_train_windows": 2121,
+  "n_test_windows": 1060
+}

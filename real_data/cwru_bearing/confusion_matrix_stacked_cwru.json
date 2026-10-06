@@ -1,0 +1,34 @@
+{
+  "labels": [
+    "Ball Fault",
+    "Inner Race Fault",
+    "Normal",
+    "Outer Race Fault"
+  ],
+  "matrix": [
+    [
+      67,
+      25,
+      11,
+      14
+    ],
+    [
+      0,
+      0,
+      0,
+      117
+    ],
+    [
+      0,
+      0,
+      473,
+      0
+    ],
+    [
+      79,
+      14,
+      0,
+      260
+    ]
+  ]
+}

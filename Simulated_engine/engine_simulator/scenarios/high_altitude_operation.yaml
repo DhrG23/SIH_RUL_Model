@@ -1,0 +1,38 @@
+# High-Altitude / Super-High-Altitude Area (SHAA) Operation Scenario
+# DRDO SIH26054 explicitly names High-Altitude operation as a required simulation
+# capability, tied to Ladakh-region HAA/SHAA deployment. Pure environmental-envelope
+# demonstration (no injected fault) -- shows how thin air and extreme cold alone
+# stress the engine's physics, distinct from the fault-scenario files.
+# Physics expectation: reduced air density -> thinner mixture, engine compensates with
+# higher throttle/RPM for equivalent power; cold ambient increases warm-up thermal lag
+# and raises oil viscosity, both visible in the exported telemetry.
+
+simulation:
+  duration_ms: 60000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 17000.0        # High Altitude Area, approaching Ladakh SHAA ceiling
+  temperature_c: -20.0        # subzero, representative of Ladakh winter operations
+  humidity_pct: 20.0          # dry high-altitude air
+  wind_speed_mph: 40.0        # high-altitude winds
+  wind_direction_deg: 270.0
+  throttle_pct: 55.0          # higher throttle needed to maintain power in thin air
+  engine_rpm: 3600.0
+  engine_load_pct: 60.0
+
+environment_events:
+  - time_ms: 20000
+    parameter: "altitude"
+    target_value: 18500.0     # climb into Super-High-Altitude Area
+    duration_ms: 15000
+  - time_ms: 35000
+    parameter: "temperature"
+    target_value: -28.0       # further cold soak at SHAA ceiling
+    duration_ms: 10000
+
+operating_condition_changes: []
+
+fault_files: []

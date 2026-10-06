@@ -1,0 +1,27 @@
+{
+  "Linear Regression": {
+    "RMSE_hours": 14.0,
+    "MAE_hours": 10.51,
+    "R2": 0.885
+  },
+  "Random Forest": {
+    "RMSE_hours": 12.48,
+    "MAE_hours": 7.51,
+    "R2": 0.909
+  },
+  "Gradient Boosting": {
+    "RMSE_hours": 13.42,
+    "MAE_hours": 9.0,
+    "R2": 0.895
+  },
+  "Support Vector Regression": {
+    "RMSE_hours": 12.51,
+    "MAE_hours": 7.7,
+    "R2": 0.909
+  },
+  "Neural Network (MLP)": {
+    "RMSE_hours": 12.32,
+    "MAE_hours": 7.98,
+    "R2": 0.911
+  }
+}

@@ -1,0 +1,70 @@
+<div class="alerts-container">
+  <div class="panel-header">
+    <div class="header-titles">
+      <h3 class="section-title">Diagnostics & Alerts</h3>
+    </div>
+  </div>
+
+  <div class="alert-filters" role="group" aria-label="Filter diagnostics">
+    <button type="button" [class.active]="filter() === 'ALL'" (click)="filter.set('ALL')">All</button>
+    <button type="button" [class.active]="filter() === 'ACTIVE'" (click)="filter.set('ACTIVE')">Active</button>
+    <button type="button" [class.active]="filter() === 'PENDING'" (click)="filter.set('PENDING')">Pending</button>
+  </div>
+
+  <div class="events-scroll">
+    @if (diagnostics().length === 0) {
+      <div class="nominal-state">
+        <div class="check-circle">
+          <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+        </div>
+        <span class="nominal-title">System Nominal</span>
+        <span class="nominal-desc">All powertrain, thermal, and lubrication parameters within flight margins.</span>
+      </div>
+    } @else {
+      @for (diag of visibleDiagnostics(); track diag.fault + diag.timestamp_ms) {
+        <div class="alert-card" [ngClass]="'sev-' + getSeverityLevel(diag.severity).toLowerCase()">
+          <div class="card-top">
+            <span class="level-tag">{{ getSeverityLevel(diag.severity) }}</span>
+            <span class="timestamp">{{ formatTime(diag.timestamp_ms) }}</span>
+          </div>
+
+          <div class="fault-title">{{ formatFaultName(diag.fault) }}</div>
+
+          <div class="meta-row">
+            <div class="meta-col">
+              <span class="meta-label">Parameter</span>
+              <span class="meta-val">{{ parameterLabel(diag.affected_parameter) }}</span>
+            </div>
+            <div class="meta-col">
+              <span class="meta-label">Severity</span>
+              <span class="meta-val">{{ (diag.severity * 100).toFixed(0) }}%</span>
+            </div>
+            <div class="meta-col">
+              <span class="meta-label">Confidence</span>
+              <span class="meta-val">{{ (diag.confidence * 100).toFixed(0) }}%</span>
+            </div>
+          </div>
+
+          @if (diag.evidence && diag.evidence.length > 0) {
+            <div class="evidence-block">
+              <span class="evidence-heading">Observed Evidence</span>
+              <ul class="evidence-items">
+                @for (item of diag.evidence; track item) {
+                  <li>{{ item }}</li>
+                }
+              </ul>
+            </div>
+          }
+        </div>
+      }
+      @if (visibleDiagnostics().length === 0) {
+        <div class="nominal-state">
+          <span class="nominal-title">No matching diagnostics</span>
+          <span class="nominal-desc">Try another filter to review the available events.</span>
+        </div>
+      }
+    }
+  </div>
+</div>

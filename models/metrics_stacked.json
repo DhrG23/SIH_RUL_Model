@@ -1,0 +1,51 @@
+{
+  "individual_models": {
+    "Linear Regression": {
+      "RMSE_hours": 12.88,
+      "MAE_hours": 10.09,
+      "R2": 0.897
+    },
+    "Random Forest": {
+      "RMSE_hours": 14.05,
+      "MAE_hours": 7.41,
+      "R2": 0.878
+    },
+    "Gradient Boosting": {
+      "RMSE_hours": 14.0,
+      "MAE_hours": 8.73,
+      "R2": 0.879
+    },
+    "Support Vector Regression": {
+      "RMSE_hours": 13.11,
+      "MAE_hours": 8.59,
+      "R2": 0.894
+    },
+    "Neural Network (MLP)": {
+      "RMSE_hours": 20.22,
+      "MAE_hours": 12.77,
+      "R2": 0.747
+    }
+  },
+  "simple_average_baseline": {
+    "RMSE_hours": 13.46,
+    "MAE_hours": 8.65,
+    "R2": 0.888
+  },
+  "stacked_meta_model": {
+    "RMSE_hours": 13.79,
+    "MAE_hours": 9.04,
+    "R2": 0.883
+  },
+  "best_single_model": "Linear Regression",
+  "meta_model_weights": {
+    "Linear Regression": 0.301,
+    "Random Forest": 0.3077,
+    "Gradient Boosting": -0.0907,
+    "Support Vector Regression": 0.2029,
+    "Neural Network (MLP)": 0.2881,
+    "model_spread": 0.0999
+  },
+  "meta_model_intercept": -2.004,
+  "verdict": "WORSE than",
+  "rmse_improvement_hours": -0.33
+}

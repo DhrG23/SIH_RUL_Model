@@ -1,0 +1,78 @@
+{
+  "accuracy": 0.809,
+  "macro_f1": 0.565,
+  "classes": [
+    "Combustion Instability",
+    "Cooling Degradation",
+    "Electrical Fault",
+    "General Wear",
+    "Injector Abnormality",
+    "Lubrication Issue",
+    "Misfire",
+    "Normal"
+  ],
+  "per_class": {
+    "Combustion Instability": {
+      "precision": 0.525,
+      "recall": 0.425,
+      "f1_score": 0.47,
+      "support": 327
+    },
+    "Cooling Degradation": {
+      "precision": 0.218,
+      "recall": 0.365,
+      "f1_score": 0.273,
+      "support": 181
+    },
+    "Electrical Fault": {
+      "precision": 0.918,
+      "recall": 0.614,
+      "f1_score": 0.736,
+      "support": 678
+    },
+    "General Wear": {
+      "precision": 0.444,
+      "recall": 0.295,
+      "f1_score": 0.355,
+      "support": 271
+    },
+    "Injector Abnormality": {
+      "precision": 0.97,
+      "recall": 0.634,
+      "f1_score": 0.767,
+      "support": 465
+    },
+    "Lubrication Issue": {
+      "precision": 0.692,
+      "recall": 0.525,
+      "f1_score": 0.597,
+      "support": 278
+    },
+    "Misfire": {
+      "precision": 0.223,
+      "recall": 0.933,
+      "f1_score": 0.36,
+      "support": 223
+    },
+    "Normal": {
+      "precision": 0.989,
+      "recall": 0.941,
+      "f1_score": 0.964,
+      "support": 4661
+    }
+  },
+  "n_train_rows": 20216,
+  "n_test_rows": 7084,
+  "feature_importance_top10": {
+    "ambient_temp_C": 0.1538,
+    "battery_voltage_V_roll_mean": 0.0969,
+    "altitude_ft": 0.0768,
+    "injection_timing_deg_roll_mean": 0.069,
+    "vibration_g_rms_roll_std": 0.0657,
+    "cylinder_head_temp_C_roll_mean": 0.0588,
+    "oil_pressure_psi_roll_mean": 0.0536,
+    "vibration_g_rms_roll_mean": 0.0513,
+    "battery_voltage_V": 0.0495,
+    "vibration_g_rms": 0.0439
+  }
+}

@@ -1,0 +1,168 @@
+/* Global CSS Variables & Natural Design System */
+:root,
+[data-theme="light"] {
+  --bg-app: #252525;
+  --bg-surface: #2f2f2f;
+  --bg-surface-elevated: #373737;
+  --bg-subtle: #3a3a3a;
+  --bg-hover: #454545;
+  --border-color: #414141;
+  --border-subtle: #393939;
+
+  --text-primary: #ededed;
+  --text-secondary: #b8b8b8;
+  --text-muted: #858585;
+
+  --accent-primary: #5b91e5;
+  --accent-subtle: rgba(91, 145, 229, 0.16);
+  --accent-border: rgba(91, 145, 229, 0.38);
+
+  --status-normal: #b7d2ba;
+  --status-normal-bg: rgba(183, 210, 186, 0.12);
+  --status-normal-border: rgba(183, 210, 186, 0.28);
+
+  --status-caution: #e9b477;
+  --status-caution-bg: rgba(233, 180, 119, 0.13);
+  --status-caution-border: rgba(233, 180, 119, 0.3);
+
+  --status-critical: #d87562;
+  --status-critical-bg: rgba(216, 117, 98, 0.13);
+  --status-critical-border: rgba(216, 117, 98, 0.3);
+
+  --chart-bg: #2c2c2c;
+  --chart-grid: #414141;
+  --chart-line: #5b91e5;
+  --chart-fill-start: rgba(91, 145, 229, 0.14);
+  --chart-fill-end: rgba(37, 99, 235, 0.0);
+
+  --twin-bg: #252525;
+  --twin-grid-center: #707070;
+  --twin-grid-sub: #454545;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.22), 0 1px 1px rgba(0, 0, 0, 0.16);
+  --shadow-md: 0 4px 8px -1px rgba(0, 0, 0, 0.28), 0 2px 4px -2px rgba(0, 0, 0, 0.18);
+
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+}
+
+[data-theme="dark"] {
+  --bg-app: #0a0d12;
+  --bg-surface: #121721;
+  --bg-surface-elevated: #171d2a;
+  --bg-subtle: #1a2230;
+  --bg-hover: #222b3d;
+  --border-color: #242e3f;
+  --border-subtle: #192231;
+
+  --text-primary: #f3f4f6;
+  --text-secondary: #9ca3af;
+  --text-muted: #6b7280;
+
+  --accent-primary: #38bdf8;
+  --accent-subtle: rgba(56, 189, 248, 0.08);
+  --accent-border: rgba(56, 189, 248, 0.25);
+
+  --status-normal: #34d399;
+  --status-normal-bg: rgba(52, 211, 153, 0.1);
+  --status-normal-border: rgba(52, 211, 153, 0.25);
+
+  --status-caution: #fbbf24;
+  --status-caution-bg: rgba(251, 191, 36, 0.1);
+  --status-caution-border: rgba(251, 191, 36, 0.25);
+
+  --status-critical: #fb7185;
+  --status-critical-bg: rgba(251, 113, 133, 0.1);
+  --status-critical-border: rgba(251, 113, 133, 0.25);
+
+  --chart-bg: #121721;
+  --chart-grid: #1a2230;
+  --chart-line: #38bdf8;
+  --chart-fill-start: rgba(56, 189, 248, 0.12);
+  --chart-fill-end: rgba(56, 189, 248, 0.0);
+
+  --twin-bg: #0a0d12;
+  --twin-grid-center: #283344;
+  --twin-grid-sub: #18202d;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.35);
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+::selection { background: var(--accent-primary); color: #fff; }
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: "Segoe UI Variable", "Aptos", "Helvetica Neue", sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11", "tnum";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Subtle, unobtrusive scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+button {
+  font-family: inherit;
+  outline: none;
+}
+
+button:disabled, select:disabled { cursor: not-allowed; opacity: 0.5; }
+
+select, input { font: inherit; }
+select:focus-visible, input:focus-visible, a:focus-visible, [tabindex="0"]:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+}
+
+button:focus-visible {
+  outline: 2px solid var(--accent-primary);
+  outline-offset: 2px;
+}
+
+
+/* Aerospace dashboard utilities */
+.eyebrow { color: var(--accent-primary); font-size: 0.6rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 0.3rem; display: block; }
+.page-intro h1 { color: var(--text-primary); font-size: clamp(1.2rem, 2vw, 1.65rem); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+.page-description { color: var(--text-secondary); font-size: 0.77rem; margin-top: 0.35rem; max-width: 760px; }

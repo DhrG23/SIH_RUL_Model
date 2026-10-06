@@ -1,0 +1,54 @@
+# Rapid Throttle Transitions Scenario
+# DRDO SIH26054 explicitly names "Rapid throttle transitions" as a required
+# simulation capability. Every other scenario in this folder ramps throttle over
+# 3000-5000ms; this one uses genuinely rapid 500-800ms ramps (10-16 simulation
+# steps at dt_ms=50) to stress the engine's transient response -- RPM overshoot,
+# brief AFR excursion, and vibration/EGT transients -- distinct from a steady-state
+# fault-progression demo. No injected fault: the point is the engine's own dynamic
+# physics response to abrupt power demand changes.
+
+simulation:
+  duration_ms: 60000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 10000.0
+  temperature_c: 15.0
+  humidity_pct: 50.0
+  wind_speed_mph: 20.0
+  wind_direction_deg: 180.0
+  throttle_pct: 25.0            # idle-ish cruise start
+  engine_rpm: 2600.0
+  engine_load_pct: 30.0
+
+environment_events: []
+
+operating_condition_changes:
+  - time_ms: 8000
+    parameter: "throttle"
+    target_value: 95.0          # rapid snap to near-full power
+    duration_ms: 600
+  - time_ms: 16000
+    parameter: "throttle"
+    target_value: 20.0          # rapid chop back toward idle
+    duration_ms: 600
+  - time_ms: 24000
+    parameter: "throttle"
+    target_value: 90.0          # second rapid spool-up
+    duration_ms: 800
+  - time_ms: 32000
+    parameter: "throttle"
+    target_value: 25.0          # rapid retard to cruise
+    duration_ms: 800
+  - time_ms: 40000
+    parameter: "throttle"
+    target_value: 85.0          # third rapid transient
+    duration_ms: 500
+  - time_ms: 48000
+    parameter: "throttle"
+    target_value: 30.0          # settle back to cruise for the remainder
+    duration_ms: 700
+
+fault_files: []

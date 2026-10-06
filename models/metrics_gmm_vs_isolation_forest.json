@@ -1,0 +1,22 @@
+{
+  "bic_by_n_regimes": {
+    "1": 1607182.2,
+    "2": 1422435.6,
+    "3": 1330169.5,
+    "4": 1289827.3,
+    "5": 1271389.9
+  },
+  "auc_by_n_regimes": {
+    "1": 0.938,
+    "2": 0.879,
+    "3": 0.917,
+    "4": 0.9,
+    "5": 0.884
+  },
+  "selected_n_regimes": 5,
+  "gmm_roc_auc": 0.884,
+  "isolation_forest_roc_auc": 0.931,
+  "auc_difference": -0.047,
+  "verdict": "Isolation Forest WINS",
+  "note": "n_regimes chosen by BIC on healthy-only data (unsupervised, no label peeking). ROC-AUC computed post-hoc against known fault labels purely to report an honest comparison number, exactly like the existing Isolation Forest's evaluation."
+}

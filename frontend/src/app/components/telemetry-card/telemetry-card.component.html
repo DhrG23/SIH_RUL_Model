@@ -1,0 +1,29 @@
+<div
+  class="telemetry-card"
+  [class.list-mode]="listMode"
+  [ngClass]="[statusClass, isSelected ? 'is-selected' : '']"
+  (click)="onSelect()"
+  (keydown)="onKeydown($event)"
+  tabindex="0"
+  role="button"
+  [attr.aria-pressed]="isSelected"
+  [attr.aria-label]="param.label + ': ' + param.formattedValue + ' ' + param.unit"
+>
+  <!-- Card Header -->
+  <div class="card-header">
+    <span class="param-label">{{ param.label }}</span>
+    @if (param.status !== 'NORMAL') {
+      <span class="status-tag" [ngClass]="'tag-' + param.status.toLowerCase()">{{ param.status }}</span>
+    }
+  </div>
+
+  <div class="card-middle">
+    <div class="value-group">
+      <span class="val-num">{{ param.formattedValue }}</span>
+      <span class="val-unit">{{ param.unit }}</span>
+    </div>
+    <div class="trend-indicator" [ngClass]="trendClass">
+      <span class="trend-icon">{{ trendSymbol }}</span>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,59 @@
+<div class="chart-container">
+  <!-- Minimalist Header & Window Controls -->
+  <div class="chart-header">
+    <div class="header-titles">
+      <h3 class="section-title">Telemetry Plot</h3>
+      <select
+        class="metric-selector"
+        [value]="selectedKey()"
+        (change)="setParameter($any($event.target).value)"
+      >
+        @for (param of availableParameters; track param.key) {
+          <option [value]="param.key">{{ param.label }} ({{ param.unit }})</option>
+        }
+      </select>
+    </div>
+
+    <!-- Window Stats -->
+    <div class="stats-group">
+      <div class="stat-pill">
+        <span class="stat-label">Current:</span>
+        <span class="stat-number highlight">
+          {{ currentValue() !== null ? currentValue()?.toFixed(activeMeta().decimals) : '—' }}
+          <span class="stat-unit">{{ activeMeta().unit }}</span>
+        </span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Min:</span>
+        <span class="stat-number">
+          {{ minValue() !== null ? minValue()?.toFixed(activeMeta().decimals) : '—' }}
+        </span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Max:</span>
+        <span class="stat-number">
+          {{ maxValue() !== null ? maxValue()?.toFixed(activeMeta().decimals) : '—' }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Time Window Selector Buttons -->
+    <div class="window-tabs">
+      @for (w of timeWindows; track w.ms) {
+        <button
+          type="button"
+          class="window-btn"
+          [class.active]="timeWindowMs() === w.ms"
+          (click)="setWindow(w.ms)"
+        >
+          {{ w.label }}
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Compact trend view -->
+  <div class="canvas-area">
+    <canvas #chartCanvas class="chart-canvas" aria-label="Line graph of telemetry value over time"></canvas>
+  </div>
+</div>

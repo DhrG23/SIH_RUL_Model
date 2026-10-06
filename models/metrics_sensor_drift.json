@@ -1,0 +1,8 @@
+{
+  "detection_rate": 0.937,
+  "avg_false_positive_sensors_per_trial": 0.11,
+  "false_alarm_rate_on_clean_rows": 0.0,
+  "z_threshold": 4.0,
+  "n_trials": 300,
+  "note": "Validated via INJECTED synthetic single-sensor faults on genuinely healthy real test rows -- no naturally occurring sensor-fault data exists, so this is the only honest way to test whether cross-sensor consistency checking actually works."
+}

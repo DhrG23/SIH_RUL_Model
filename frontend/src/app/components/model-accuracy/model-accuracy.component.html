@@ -1,0 +1,44 @@
+<section class="accuracy-card" aria-labelledby="accuracy-title">
+  <div class="accuracy-header">
+    <div>
+      <span class="accuracy-kicker">Validation report</span>
+      <h2 id="accuracy-title">How accurate is each model?</h2>
+      <p>Held-out test engines · lower error and higher R² are better</p>
+    </div>
+  </div>
+
+  <div class="accuracy-grid">
+    <div class="metric-group">
+      <div class="metric-heading"><span>Prediction error</span><span>hours</span></div>
+      @for (model of models; track model.name) {
+        <div class="metric-row">
+          <span class="model-name">{{ model.shortName }}</span>
+          <div class="bar-track" aria-hidden="true"><span class="rmse-bar" [style.width.%]="barWidth(model.rmse, maxError)"></span></div>
+          <strong>{{ model.rmse | number: '1.1-1' }}</strong>
+        </div>
+        <div class="metric-row metric-row-secondary">
+          <span class="model-name">MAE</span>
+          <div class="bar-track" aria-hidden="true"><span class="mae-bar" [style.width.%]="barWidth(model.mae, maxError)"></span></div>
+          <strong>{{ model.mae | number: '1.1-1' }}</strong>
+        </div>
+      }
+    </div>
+
+    <div class="metric-group r2-group">
+      <div class="metric-heading"><span>R² score</span><span>0 to 1</span></div>
+      @for (model of models; track model.name) {
+        <div class="r2-row">
+          <span class="model-name">{{ model.shortName }}</span>
+          <div class="bar-track" aria-hidden="true"><span class="r2-bar" [style.width.%]="model.r2 * 100"></span></div>
+          <strong>{{ model.r2 | number: '1.2-2' }}</strong>
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="accuracy-legend">
+    <span><i class="legend-swatch rmse-swatch"></i>RMSE</span>
+    <span><i class="legend-swatch mae-swatch"></i>MAE</span>
+    <span><i class="legend-swatch r2-swatch"></i>R² fit</span>
+  </div>
+</section>

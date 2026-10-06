@@ -1,0 +1,90 @@
+<div class="health-container">
+  <div class="card-header">
+    <div class="header-titles">
+      <h3 class="section-title">Engine Health Index</h3>
+    </div>
+    <span class="status-badge" [ngClass]="'badge-' + healthState().toLowerCase()">
+      {{ healthState() }}
+    </span>
+  </div>
+
+  <div class="health-body">
+    <!-- Clean Circular Gauge -->
+    <div class="gauge-box">
+      <svg class="gauge-svg" viewBox="0 0 90 90">
+        <circle cx="45" cy="45" r="38" class="gauge-track" />
+        <circle
+          cx="45"
+          cy="45"
+          r="38"
+          class="gauge-progress"
+          [style.stroke]="healthColor()"
+          [style.stroke-dashoffset]="strokeDashoffset()"
+        />
+      </svg>
+      <div class="gauge-overlay">
+        <span class="gauge-val">{{ overallScore().toFixed(1) }}</span>
+        <span class="gauge-lbl">% Health</span>
+      </div>
+    </div>
+
+    <!-- Subsystems Minimal Progress Bars -->
+    <div class="subsystems-list">
+      <div class="subsystem-item">
+        <div class="sub-header">
+          <span class="sub-title">Cooling System</span>
+          <span class="sub-num">{{ health().cooling.toFixed(1) }}%</span>
+        </div>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            [ngClass]="getSubsystemClass(health().cooling)"
+            [style.width.%]="health().cooling"
+          ></div>
+        </div>
+      </div>
+
+      <div class="subsystem-item">
+        <div class="sub-header">
+          <span class="sub-title">Lubrication Circuit</span>
+          <span class="sub-num">{{ health().lubrication.toFixed(1) }}%</span>
+        </div>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            [ngClass]="getSubsystemClass(health().lubrication)"
+            [style.width.%]="health().lubrication"
+          ></div>
+        </div>
+      </div>
+
+      <div class="subsystem-item">
+        <div class="sub-header">
+          <span class="sub-title">Fuel & Injection</span>
+          <span class="sub-num">{{ health().injector.toFixed(1) }}%</span>
+        </div>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            [ngClass]="getSubsystemClass(health().injector)"
+            [style.width.%]="health().injector"
+          ></div>
+        </div>
+      </div>
+
+      <div class="subsystem-item">
+        <div class="sub-header">
+          <span class="sub-title">Combustion Chamber</span>
+          <span class="sub-num">{{ health().combustion.toFixed(1) }}%</span>
+        </div>
+        <div class="bar-track">
+          <div
+            class="bar-fill"
+            [ngClass]="getSubsystemClass(health().combustion)"
+            [style.width.%]="health().combustion"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

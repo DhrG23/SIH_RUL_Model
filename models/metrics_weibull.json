@@ -1,0 +1,26 @@
+{
+  "RMSE_hours": 18.58,
+  "MAE_hours": 14.85,
+  "R2": 0.798,
+  "calibration": {
+    "z=1.0": {
+      "target_coverage": 0.683,
+      "empirical_coverage": 0.845,
+      "avg_interval_width_hours": 60.3,
+      "well_calibrated": false
+    },
+    "z=1.645": {
+      "target_coverage": 0.9,
+      "empirical_coverage": 0.937,
+      "avg_interval_width_hours": 101.5,
+      "well_calibrated": true
+    },
+    "z=1.96": {
+      "target_coverage": 0.95,
+      "empirical_coverage": 0.963,
+      "avg_interval_width_hours": 122.9,
+      "well_calibrated": true
+    }
+  },
+  "note": "Point-prediction metrics are directly comparable to the other 5 models (same data, same split, same metrics). Calibration checks whether the predicted UNCERTAINTY range can actually be trusted -- a claim none of the other 5 models make at all."
+}

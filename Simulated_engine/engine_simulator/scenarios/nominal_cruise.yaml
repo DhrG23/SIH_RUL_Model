@@ -1,0 +1,36 @@
+# Nominal Baseline Cruise Mission Scenario
+# 60-second mission under steady cruising conditions with no faults.
+
+simulation:
+  duration_ms: 60000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 10000.0
+  temperature_c: 15.0
+  humidity_pct: 50.0
+  wind_speed_mph: 25.0
+  wind_direction_deg: 180.0
+  throttle_pct: 35.0
+  engine_rpm: 3200.0
+  engine_load_pct: 45.0
+
+environment_events:
+  - time_ms: 25000
+    parameter: "wind_speed"
+    target_value: 35.0
+    duration_ms: 5000
+
+operating_condition_changes:
+  - time_ms: 15000
+    parameter: "throttle"
+    target_value: 50.0
+    duration_ms: 3000
+  - time_ms: 35000
+    parameter: "throttle"
+    target_value: 35.0
+    duration_ms: 3000
+
+fault_files: []

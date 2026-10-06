@@ -1,0 +1,15 @@
+{
+  "raw_classifier_false_positive_row_rate_on_healthy_prefix": 0.034,
+  "debounced_premature_confirmation_rate": 0.435,
+  "debounced_fault_detection_rate": 1.0,
+  "mean_confirmation_lag_cycles_after_onset": 13.4,
+  "median_confirmation_lag_cycles": 2.0,
+  "n_whole_life_healthy_engines": 0,
+  "n_faulty_engines": 23,
+  "gate_settings": {
+    "n_consecutive": 5,
+    "window": 10,
+    "prob_threshold": 0.8
+  },
+  "note": "raw_false_positive_rate is measured on each faulty engine's own healthy PREFIX (before its true fault onset), since no engine in this synthetic dataset stays healthy for its entire life -- every engine eventually fails. That's a real property of the data worth stating, not something to paper over."
+}

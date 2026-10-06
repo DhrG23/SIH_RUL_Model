@@ -1,0 +1,19 @@
+# Lubrication Degradation Fault Configuration
+# Physical Impact: Viscosity loss and bearing clearance growth -> Elevated friction, higher oil heating, vibration.
+fault_type: "lubrication_degradation"
+description: "Lubricant thermal shear thinning and hydrodynamic bearing clearance wear."
+
+start_time_ms: 10000
+end_time_ms: 50000
+severity_start: 0.0
+severity_end: 0.85
+progression_curve: "exponential"
+
+# Latent physical parameters scaled by the progression severity
+affected_parameters:
+  viscosity_loss_ratio: 0.50
+  bearing_clearance_wear: 0.80
+  boundary_scuffing_severity: 0.60
+
+config:
+  friction_multiplier_peak: 1.60

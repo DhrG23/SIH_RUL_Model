@@ -1,0 +1,82 @@
+<div class="twin-viewport-wrapper">
+  <div class="viewport-header">
+    <div class="header-info">
+      <div>
+        <span class="viewport-kicker">3D DIGITAL TWIN</span>
+        <span class="viewport-title">Aero-piston propulsion system</span>
+      </div>
+      <span class="sync-status" [class.ready]="loadState() === 'ready'">
+        <span class="status-dot"></span>
+        {{ loadState() === 'ready' ? 'Live model' : (loadState() === 'loading' ? 'Loading geometry' : 'Unavailable') }}
+      </span>
+    </div>
+
+    <div class="viewport-controls">
+      <div class="view-preset-pills" aria-label="Model views">
+        <button type="button" class="pill-btn" [class.active]="activeView() === 'iso'" (click)="setViewPreset('iso')">Iso</button>
+        <button type="button" class="pill-btn" [class.active]="activeView() === 'front'" (click)="setViewPreset('front')">Propeller</button>
+        <button type="button" class="pill-btn" [class.active]="activeView() === 'top'" (click)="setViewPreset('top')">Cylinder heads</button>
+        <button type="button" class="pill-btn" [class.active]="activeView() === 'exhaust'" (click)="setViewPreset('exhaust')">Exhaust</button>
+        <button type="button" class="pill-btn" [class.active]="activeView() === 'oil'" (click)="setViewPreset('oil')">Lubrication</button>
+      </div>
+
+      <div class="control-actions">
+        <button type="button" class="action-btn" [class.active]="thermalOverlay()" (click)="thermalOverlay.set(!thermalOverlay())" title="Show CHT and EGT thermal overlay">Thermal</button>
+        <button type="button" class="action-btn" [class.active]="isWireframe()" (click)="toggleWireframe()" title="Toggle wireframe">Wire</button>
+        <button type="button" class="action-btn" (click)="resetCamera()" title="Reset viewpoint">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <div #webglContainer class="canvas-holder">
+    <div class="twin-live-strip">
+      <div class="live-chip">
+        <span class="live-label">RPM</span>
+        <strong>{{ getLiveValue('engine_rpm') }}</strong>
+      </div>
+      <div class="live-chip">
+        <span class="live-label">CHT</span>
+        <strong>{{ getLiveValue('cht') }}<small>°C</small></strong>
+      </div>
+      <div class="live-chip">
+        <span class="live-label">EGT</span>
+        <strong>{{ getLiveValue('egt') }}<small>°C</small></strong>
+      </div>
+      <div class="live-chip">
+        <span class="live-label">OIL</span>
+        <strong>{{ getLiveValue('oil_pressure') }}<small> PSI</small></strong>
+      </div>
+      <div class="live-chip fault-chip" [class.has-faults]="activeFaultCount() > 0">
+        <span class="live-label">FAULTS</span>
+        <strong>{{ activeFaultCount() }}</strong>
+      </div>
+    </div>
+
+    <div class="twin-binding-card">
+      <div class="binding-title">TELEMETRY BINDING</div>
+      <div class="binding-row"><span class="binding-dot binding-rpm"></span>RPM → propeller motion</div>
+      <div class="binding-row"><span class="binding-dot binding-thermal"></span>CHT / EGT → thermal state</div>
+      <div class="binding-row"><span class="binding-dot binding-health"></span>Faults → diagnostic highlights</div>
+    </div>
+
+    <div class="viewport-legend">
+      <span><i class="legend-swatch legend-cool"></i>Engine structure</span>
+      <span><i class="legend-swatch legend-hot"></i>Thermal load</span>
+      <span><i class="legend-swatch legend-fault"></i>Fault focus</span>
+    </div>
+
+    @if (loadState() === 'loading') {
+      <div class="state-overlay">
+        <div class="calm-spinner"></div>
+        <span class="state-message">Loading engine geometry...</span>
+      </div>
+    }
+
+    @if (loadState() === 'error') {
+      <div class="state-overlay error-state">
+        <span class="state-message">{{ errorMessage() }}</span>
+        <button type="button" class="action-btn" (click)="retryLoad()">Retry model load</button>
+      </div>
+    }
+  </div>
+</div>

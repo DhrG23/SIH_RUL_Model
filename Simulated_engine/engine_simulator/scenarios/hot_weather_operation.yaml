@@ -1,0 +1,33 @@
+# Hot-Weather Operation Scenario
+# DRDO SIH26054 explicitly names "Hot-weather operation" as a required simulation
+# capability. Pure environmental-envelope demonstration (no injected fault) -- shows
+# how high ambient temperature alone shrinks the engine's thermal margin (higher
+# baseline CHT/oil temp for the same throttle setting), which is exactly the
+# condition under which a real cooling-system fault would be most dangerous, even
+# though this scenario itself stays fault-free.
+
+simulation:
+  duration_ms: 60000
+  dt_ms: 50
+  random_seed: 42
+  dynamic_rpm: true
+
+initial_conditions:
+  altitude_ft: 4000.0          # lower-altitude desert/plains operating environment
+  temperature_c: 42.0          # hot-weather ambient
+  humidity_pct: 15.0           # dry desert air
+  wind_speed_mph: 12.0
+  wind_direction_deg: 90.0
+  throttle_pct: 48.0
+  engine_rpm: 3300.0
+  engine_load_pct: 52.0
+
+environment_events:
+  - time_ms: 25000
+    parameter: "temperature"
+    target_value: 47.0         # peak midday desert heat
+    duration_ms: 10000
+
+operating_condition_changes: []
+
+fault_files: []

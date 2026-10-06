@@ -1,0 +1,18 @@
+# Oil Pump Degradation Fault Configuration
+# Physical Impact: Pump internal leakage and impeller tooth wear -> Oil flow and oil pressure collapse.
+fault_type: "oil_pump_degradation"
+description: "Progressive mechanical wear in oil pump gears and pressure relief spring fatigue."
+
+start_time_ms: 20000
+end_time_ms: 45000
+severity_start: 0.0
+severity_end: 0.75
+progression_curve: "linear"
+
+# Latent physical parameters scaled by the progression severity
+affected_parameters:
+  pump_wear_factor: 0.70
+  bearing_clearance_wear: 0.25
+
+config:
+  min_oil_pressure_alarm_psi: 25.0
