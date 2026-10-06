@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   wsUrl: 'wss://sih-rul-model.onrender.com/ws/telemetry',
-  httpUrl: 'https://sih-rul-model.onrender.com/',
+  httpUrl: 'https://sih-rul-model.onrender.com',
   staleThresholdMs: 2000,
   maxReconnectAttempts: 10,
   initialReconnectDelayMs: 1000,
